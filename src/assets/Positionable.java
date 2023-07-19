@@ -17,7 +17,7 @@ public abstract class Positionable extends JComponent implements MouseListener {
 
         setOpaque(false); // Allow mouse events to be detected
         setBounds(x, y, width, height); // Set the bounds of the component
-        setBorder(BorderFactory.createTitledBorder("Positionable"));
+        setBorder(BorderFactory.createTitledBorder("Positionable")); // Show the actual border
         addMouseListener(this); // Register the mouse listener
 
     }
@@ -51,10 +51,7 @@ public abstract class Positionable extends JComponent implements MouseListener {
         System.out.println("Mouse exited");
     }
 
-    @Override
-    public void processMouseEvent(MouseEvent e) {
-        super.processMouseEvent(e);
-    }
+
 
     public int getX() {
         return this.x;
@@ -67,6 +64,13 @@ public abstract class Positionable extends JComponent implements MouseListener {
     }
     public int getHeight() {
         return this.height;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+    public void setY(int y) {
+        this.y = y;
     }
 
 }

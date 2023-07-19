@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel {
     private final ArrayList<Positionable> positionables;
     public GamePanel() {
+        // All pieces in the game
         positionables = new ArrayList<>();
-
     }
     public void addPositionable(Positionable positionable) {
         positionables.add(positionable);
@@ -22,14 +22,6 @@ public class GamePanel extends JPanel {
         remove(positionable);
     }
 
-    @Override
-    public void processMouseEvent(MouseEvent e) {
-        super.processMouseEvent(e);
-
-        for (Positionable positionable : positionables) {
-            positionable.processMouseEvent(e);
-        }
-    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -39,6 +31,7 @@ public class GamePanel extends JPanel {
         int size = 100;
         Color lightColor = new Color(0xF0D9B5);
         Color darkColor = new Color(0xB58863);
+
         for (int r = size; r <= size * 8; r += size) {
             for (int c = size; c <= size * 8; c += size) {
                 if ((r + c) / size % 2 == 0) {
@@ -50,7 +43,7 @@ public class GamePanel extends JPanel {
             }
         }
 
-        // Draw positionables
+        // Draw all pieces
         for (Positionable p : positionables) {
             p.paintComponent(g);
         }
