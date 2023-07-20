@@ -10,7 +10,6 @@ public class Game {
         this.panel = new GamePanel();
         this.window = new GameWindow(panel);
 
-        //
         Piece test = new King(125,125,50,50, 1);
         Piece test2 = new King(225,125, 50,50, 2);
         panel.addPositionable(test);
