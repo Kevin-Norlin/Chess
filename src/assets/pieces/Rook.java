@@ -4,7 +4,7 @@ import assets.Piece;
 
 // "Torn"
 public class Rook extends Piece {
-    public Rook(int x, int y, int width, int height) {
-        super(x, y, width, height);
+    public Rook(int x, int y, int width, int height, int player) {
+        super(x, y, width, height, player);
     }
 }

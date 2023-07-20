@@ -7,14 +7,21 @@ import java.awt.event.MouseListener;
 
 public class Piece extends Positionable {
 
-    public Piece(int x, int y, int width, int height) {
+    private final int player;
+    public Piece(int x, int y, int width, int height, int player) {
         super(x, y, width, height);
+        this.player = player;
     }
+    // Code responsible for drawing the piece
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.blue);
-        g.fillRect(getX(),getY(),getWidth(),getHeight());
+        if (this.player == 1) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.red);
+        }
+        g.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
 
     }
 
