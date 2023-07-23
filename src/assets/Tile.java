@@ -48,6 +48,9 @@ public class Tile extends JComponent {
     public int getHeight() {
         return this.height;
     }
+    public void setPiece(Piece piece) {
+        this.piece = piece;
+    }
 
 
 }
