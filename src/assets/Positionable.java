@@ -27,6 +27,8 @@ public abstract class Positionable extends JComponent implements MouseListener, 
         addMouseMotionListener(this);
     }
 
+
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -65,7 +67,7 @@ public abstract class Positionable extends JComponent implements MouseListener, 
                 yTile = Constants.TILES[i];
             }
         }
-        System.out.println(xTile);
+
         // Set the new position for the box
         this.setX(xTile);
         this.setY(yTile);

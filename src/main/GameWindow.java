@@ -11,7 +11,7 @@ public class GameWindow extends JFrame {
 
         // Terminate code when window is closed
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        setResizable(false);
         setSize(1000,1000);
 
         // Text above the chess board
