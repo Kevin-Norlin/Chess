@@ -8,8 +8,8 @@ import java.awt.event.MouseListener;
 public class Piece extends Movable {
 
     private final int player;
-    public Piece(int x, int y, int width, int height, int player) {
-        super(x, y, width, height);
+    public Piece(Point p, int width, int height, int player) {
+        super(p, width, height);
         this.player = player;
     }
     // Code responsible for drawing the piece

@@ -2,10 +2,12 @@ package assets.pieces;
 
 import assets.Piece;
 
+import java.awt.*;
+
 // "Löpare"
 public class Bishop extends Piece {
-    public Bishop(int x, int y, int width, int height, int player) {
-        super(x, y, width, height, player);
+    public Bishop(Point p, int width, int height, int player) {
+        super(p, width, height, player);
     }
     public String getName() {
         return "Bishop";

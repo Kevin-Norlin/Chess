@@ -1,13 +1,11 @@
 package main;
 
-import assets.Movable;
 import assets.Piece;
-import assets.Positionable;
 import assets.Tile;
 import assets.pieces.King;
 
+import java.awt.*;
 import java.util.ArrayList;
-
 import static constants.Constants.*;
 
 public class Game {
@@ -33,8 +31,8 @@ public class Game {
         this.window = new GameWindow(panel);
 
         // Test pieces
-        Piece test = new King(125,125,50,50, 1);
-        Piece test2 = new King(225,125, 50,50, 2);
+        Piece test = new King(new Point(1,1), 50,50, 1);
+        Piece test2 = new King(new Point(1,2), 50,50, 2);
         panel.addPositionable(test);
         panel.addPositionable(test2);
 
@@ -47,6 +45,7 @@ public class Game {
         while (true) {
             boolean pieceFound;
             panel.repaint();
+            // Check all tiles. Set pieces to the tiles they are over and clear the ones that have no piece.
             for (Tile t: chessBoard) {
                 pieceFound = false;
                 for (Piece p : pieces) {

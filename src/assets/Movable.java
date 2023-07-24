@@ -13,6 +13,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     private int x, y, width, height;
     private Point initialClick;
 
+    /*
     public Movable(int x, int y, int width, int height) {
         super(x,y,width,height);
         setOpaque(false); // Allow mouse events to be detected
@@ -21,6 +22,17 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         addMouseListener(this); // Register the mouse listener
         addMouseMotionListener(this);
     }
+
+     */
+    public Movable(Point p, int width, int height) {
+        super(p.x * Constants.SIZE + 25, p.y * Constants.SIZE + 25, width, height, p);
+        setOpaque(false); // Allow mouse events to be detected
+        setBounds(p.x * Constants.SIZE + 25, p.y * Constants.SIZE + 25, width, height); // Set the bounds of the component
+        setBorder(BorderFactory.createTitledBorder(this.getClass().getName().substring(this.getClass().getName().lastIndexOf('.') + 1))); // Show the actual border
+        addMouseListener(this); // Register the mouse listener
+        addMouseMotionListener(this);
+    }
+
 
 
 
