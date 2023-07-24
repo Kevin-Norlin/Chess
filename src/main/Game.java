@@ -1,21 +1,24 @@
 package main;
 
+import assets.Movable;
 import assets.Piece;
+import assets.Positionable;
 import assets.Tile;
 import assets.pieces.King;
 
 import java.util.ArrayList;
 
-import static constants.Constants.TILE_COLOR_DARK;
-import static constants.Constants.TILE_COLOR_LIGHT;
+import static constants.Constants.*;
 
 public class Game {
     private GameWindow window;
     private GamePanel panel;
+    private ArrayList<Tile> chessBoard;
+    private ArrayList<Piece> pieces;
     public Game() {
-        int size = 100;
-
-        ArrayList<Tile> chessBoard = new ArrayList<>();
+        chessBoard = new ArrayList<>();
+        pieces = new ArrayList<>();
+        int size = SIZE;
         // Fill the list with all tiles in the chessBoard
         for (int r = size; r <= size * 8; r += size) {
             for (int c = size; c <= size * 8; c += size) {
@@ -26,27 +29,36 @@ public class Game {
                 }
             }
         }
-
         this.panel = new GamePanel(chessBoard);
         this.window = new GameWindow(panel);
 
+        // Test pieces
         Piece test = new King(125,125,50,50, 1);
         Piece test2 = new King(225,125, 50,50, 2);
-
-
-
         panel.addPositionable(test);
         panel.addPositionable(test2);
+
+        pieces.add(test);
+        pieces.add(test2);
     }
 
     public void startGame() {
-        // Initialize the game
-
-
+        // Gameloop
         while (true) {
+            boolean pieceFound;
             panel.repaint();
-
-
+            for (Tile t: chessBoard) {
+                pieceFound = false;
+                for (Piece p : pieces) {
+                    if (t.checkTile(p)) {
+                        t.setPiece(p);
+                        pieceFound = true;
+                    }
+                }
+                if (!pieceFound) {
+                    t.clearTile();
+                }
+            }
         }
     }
 }

@@ -1,12 +1,9 @@
 package main;
 
 import assets.Movable;
-import assets.Positionable;
 import assets.Tile;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel {

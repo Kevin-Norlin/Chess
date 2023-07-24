@@ -68,10 +68,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.setX(xTile);
         this.setY(yTile);
         this.setLocation(xTile,yTile); // This is for the listener-events!
-
-
     }
-
     @Override
     public void mouseEntered(MouseEvent e) {
         System.out.println("Mouse entered");
@@ -94,5 +91,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     @Override
     public void mouseMoved(MouseEvent e) {
     }
+
+
 
 }

@@ -33,6 +33,9 @@ public class Tile extends JComponent {
     public void paintComponent(Graphics g) {
         g.setColor(this.color);
         g.fillRect(getX(),getY(),getWidth(),getHeight());
+        if (this.piece != null) {
+            g.drawString("P: " + this.piece.getName(), this.getX(), this.getY());
+        }
         super.paintComponent(g);
     }
 
@@ -52,5 +55,16 @@ public class Tile extends JComponent {
         this.piece = piece;
     }
 
+    // Check if a piece is in bounds of a Specific tile
+    public boolean checkTile(Piece p) {
+        if (this.getX() <= p.getX() && (this.getX() + this.getWidth()) >= p.getX()
+            && this.getY() <= p.getY() && (this.getY() + this.getHeight()) >= p.getY()) {
+            return true;
+        }
+        return false;
+    }
+    public void clearTile() {
+        setPiece(null);
+    }
 
 }

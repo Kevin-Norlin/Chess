@@ -22,7 +22,7 @@ public class Piece extends Movable {
             g.setColor(Color.red);
         }
         g.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
-
     }
+
 
 }
