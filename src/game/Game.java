@@ -1,4 +1,4 @@
-package main;
+package game;
 
 import assets.Piece;
 import assets.Tile;
@@ -41,7 +41,7 @@ public class Game {
     }
 
     public void startGame() {
-        // Gameloop
+        // Game loop
         while (true) {
             boolean pieceFound;
             panel.repaint();

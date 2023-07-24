@@ -1,4 +1,4 @@
-package main;
+package game;
 
 import assets.Movable;
 import assets.Tile;
