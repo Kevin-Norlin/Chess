@@ -34,31 +34,84 @@ public class Game {
         }
         this.panel = new GamePanel(chessBoard);
         this.window = new GameWindow(panel);
-
-        // Test pieces
-        Piece test = new Queen(new Point(1,1), p1);
-        Piece test2 = new Rook(new Point(1,2), p2);
-        Piece bishop = new Bishop(new Point(1,3),p2);
-        Piece pawnP2 = new Pawn(new Point(4,8),p2);
-        Piece pawnP1 = new Pawn(new Point(4,1),p1);
-        Piece kingP1 = new King(new Point(5,1),p1);
-        Piece knightP1 = new Knight(new Point(6,1),p1);
-
-
-        panel.addPositionable(test);
-        panel.addPositionable(test2);
-        panel.addPositionable(bishop);
-        panel.addPositionable(pawnP1);
-        panel.addPositionable(pawnP2);
+        
+        // Create pieces for Player 1 (p1) and add them to the panel and pieces array
+        Piece kingP1 = new King(new Point(5, 1), p1);
         panel.addPositionable(kingP1);
-        panel.addPositionable(knightP1);
-        pieces.add(test);
-        pieces.add(test2);
-        pieces.add(bishop);
-        pieces.add(pawnP1);
-        pieces.add(pawnP2);
         pieces.add(kingP1);
-        pieces.add(knightP1);
+
+        Piece queenP1 = new Queen(new Point(4, 1), p1);
+        panel.addPositionable(queenP1);
+        pieces.add(queenP1);
+
+        Piece rook1P1 = new Rook(new Point(1, 1), p1);
+        panel.addPositionable(rook1P1);
+        pieces.add(rook1P1);
+
+        Piece rook2P1 = new Rook(new Point(8, 1), p1);
+        panel.addPositionable(rook2P1);
+        pieces.add(rook2P1);
+
+        Piece knight1P1 = new Knight(new Point(2, 1), p1);
+        panel.addPositionable(knight1P1);
+        pieces.add(knight1P1);
+
+        Piece knight2P1 = new Knight(new Point(7, 1), p1);
+        panel.addPositionable(knight2P1);
+        pieces.add(knight2P1);
+
+        Piece bishop1P1 = new Bishop(new Point(3, 1), p1);
+        panel.addPositionable(bishop1P1);
+        pieces.add(bishop1P1);
+
+        Piece bishop2P1 = new Bishop(new Point(6, 1), p1);
+        panel.addPositionable(bishop2P1);
+        pieces.add(bishop2P1);
+
+        for (int col = 1; col <= 8; col++) {
+            Piece pawnP1 = new Pawn(new Point(col, 2), p1);
+            panel.addPositionable(pawnP1);
+            pieces.add(pawnP1);
+        }
+
+        // Create pieces for Player 2 (p2) and add them to the panel and pieces array
+        Piece kingP2 = new King(new Point(5, 8), p2);
+        panel.addPositionable(kingP2);
+        pieces.add(kingP2);
+
+        Piece queenP2 = new Queen(new Point(4, 8), p2);
+        panel.addPositionable(queenP2);
+        pieces.add(queenP2);
+
+        Piece rook1P2 = new Rook(new Point(1, 8), p2);
+        panel.addPositionable(rook1P2);
+        pieces.add(rook1P2);
+
+        Piece rook2P2 = new Rook(new Point(8, 8), p2);
+        panel.addPositionable(rook2P2);
+        pieces.add(rook2P2);
+
+        Piece knight1P2 = new Knight(new Point(2, 8), p2);
+        panel.addPositionable(knight1P2);
+        pieces.add(knight1P2);
+
+        Piece knight2P2 = new Knight(new Point(7, 8), p2);
+        panel.addPositionable(knight2P2);
+        pieces.add(knight2P2);
+
+        Piece bishop1P2 = new Bishop(new Point(3, 8), p2);
+        panel.addPositionable(bishop1P2);
+        pieces.add(bishop1P2);
+
+        Piece bishop2P2 = new Bishop(new Point(6, 8), p2);
+        panel.addPositionable(bishop2P2);
+        pieces.add(bishop2P2);
+
+        for (int col = 1; col <= 8; col++) {
+            Piece pawnP2 = new Pawn(new Point(col, 7), p2);
+            panel.addPositionable(pawnP2);
+            pieces.add(pawnP2);
+        }
     }
 
     public void startGame() {
