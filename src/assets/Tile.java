@@ -63,6 +63,9 @@ public class Tile extends JComponent {
         }
         return false;
     }
+    public boolean checkTile2() {
+        return false;
+    }
     public void clearTile() {
         setPiece(null);
     }

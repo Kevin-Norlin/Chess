@@ -8,6 +8,7 @@ import java.awt.*;
 // "Bonde"
 public class Pawn extends Piece {
     private boolean firstMove; // The pawn piece gets to move two tiles on the first move
+    private String promoteTo;
     public Pawn(Point p, Player player) {
         super(p, player);
         firstMove = true;
@@ -47,4 +48,20 @@ public class Pawn extends Piece {
 
         }
     }
+    // Returns true if the Pawn is moved diagonally
+    public boolean isCaptureMove() {
+        int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
+        int yDiff = this.getPos().y - this.getPrevPos().y;
+        if (this.getPlayer().getNum() == 1 && xDiff == 1 && yDiff == 1) {
+            return true;
+        }
+        if (this.getPlayer().getNum() == 2 && xDiff == 1 && yDiff == -1) {
+            return true;
+        }
+        return false;
+    }
+    public String getPromoteTo() {
+        return this.promoteTo;
+    }
+
 }

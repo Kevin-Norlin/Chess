@@ -13,10 +13,11 @@ public class Game {
     private GamePanel panel;
     private ArrayList<Tile> chessBoard;
     private ArrayList<Piece> pieces;
+    private Player p1,p2;
 
     public Game() {
-        Player p1 = new Player(1);
-        Player p2 = new Player(2);
+        p1 = new Player(1);
+        p2 = new Player(2);
 
         chessBoard = new ArrayList<>();
         pieces = new ArrayList<>();
@@ -34,7 +35,87 @@ public class Game {
         }
         this.panel = new GamePanel(chessBoard);
         this.window = new GameWindow(panel);
-        
+        fillBoard();
+
+
+    }
+
+    public void startGame() {
+        Piece pToRemove = null;
+        // Game loop
+        while (true) {
+
+            panel.repaint();
+            checkTiles();
+
+            // Move pieces to new pos if its a valid move
+
+            for (Piece p : pieces) {
+                // Special case for captures with Pawn
+                if (p instanceof Pawn && p.hasMoved() && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) != null) {
+                    pToRemove = pieceInSamePos(p);
+                    p.update();
+                    break;
+                }
+                // If the Pawn tries to move diagonally but there's nothing to capture
+                if (p instanceof Pawn && p.hasMoved() && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) == null) {
+                    p.revert();
+                    break;
+                }
+                // If the Pawn tries to capture vertically
+                if (p instanceof Pawn && p.hasMoved() && p.isValidMove() && pieceInSamePos(p) != null) {
+                    p.revert();
+                    break;
+                }
+
+                if (p.hasMoved() && p.isValidMove()) { // Check all pieces if they have made a valid move
+                    // Check if any Pieces have been knocked out
+                    for (Piece p2 : pieces) {
+                        if (p.equals(p2)) {
+                            continue;
+                        }
+                        if (p.getPos().equals(p2.getPos()) && !p.getPlayer().equals(p2.getPlayer())) { // Check if there is a piece in the position of p
+                            System.out.println("Valid move! " + p2.getName() + " is out!");
+                            pToRemove = p2;
+                        }
+                    }
+                    p.update();
+                }
+                if (p.hasMoved() && !p.isValidMove()) {
+                    p.revert();
+                }
+                
+            }
+            // NULL!!!
+            if (pToRemove != null) {
+                pieces.remove(pToRemove);
+                panel.removePositionable(pToRemove);
+                pToRemove = null;
+            }
+
+            // Check if any Pawns should be promoted
+            for (Piece p : pieces) {
+                if (p instanceof Pawn && ((Pawn) p).getPromoteTo() != null) {
+                    String name = ((Pawn) p).getPromoteTo();
+                    if (name.equals("Queen")) {
+                        p = new Queen(p.getPos(),p.getPlayer());
+                    }
+                    else if (name.equals("Rook")) {
+                        p = new Rook(p.getPos(),p.getPlayer());
+                    }
+                    else if (name.equals("Bishop")) {
+                        p = new Bishop(p.getPos(),p.getPlayer());
+                    }
+                    else if (name.equals("Knight")) {
+                        p = new Knight(p.getPos(),p.getPlayer());
+                    }
+                }
+            }
+
+
+        }
+    }
+    public void fillBoard() {
         // Create pieces for Player 1 (p1) and add them to the panel and pieces array
         Piece kingP1 = new King(new Point(5, 1), p1);
         panel.addPositionable(kingP1);
@@ -113,37 +194,28 @@ public class Game {
             pieces.add(pawnP2);
         }
     }
-
-    public void startGame() {
-        // Game loop
-        while (true) {
-
-            boolean pieceFound;
-            panel.repaint();
-
-            // Check all tiles. Set pieces to the tiles they are over and clear the ones that have no piece.
-            for (Tile t: chessBoard) {
-                pieceFound = false;
-                for (Piece p : pieces) {
-                    if (t.checkTile(p)) {
-                        t.setPiece(p);
-                        pieceFound = true;
-                    }
-                }
-                if (!pieceFound) {
-                    t.clearTile();
-                }
-            }
+    public void checkTiles() {
+        boolean pieceFound;
+        // Check all tiles. Set pieces to the tiles they are over and clear the ones that have no piece.
+        for (Tile t: chessBoard) {
+            pieceFound = false;
             for (Piece p : pieces) {
-                if (p.hasMoved() && p.isValidMove()) {
-                    p.update();
-                }
-                if (p.hasMoved() && !p.isValidMove()) {
-                    p.revert();
+                if (t.checkTile(p)) {
+                    t.setPiece(p);
+                    pieceFound = true;
                 }
             }
-            //System.out.println(pieces.get(2).isValidMove());  //+ " Pos: " + pieces.get(2).getPos() + " " + "prevPos: " + pieces.get(2).getPrevPos());
-
+            if (!pieceFound) {
+                t.clearTile();
+            }
         }
+    }
+    public Piece pieceInSamePos(Piece p) {
+        for (Piece piece : pieces) {
+            if (p.getPos().equals(piece.getPos()) && !p.equals(piece)) {
+                return piece;
+            }
+        }
+        return null;
     }
 }
