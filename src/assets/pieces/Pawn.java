@@ -8,10 +8,13 @@ import java.awt.*;
 // "Bonde"
 public class Pawn extends Piece {
     private boolean firstMove; // The pawn piece gets to move two tiles on the first move
+    private boolean passant; // En passant rule, this should be true if the piece has moved 2 tiles.
     private String promoteTo;
+
     public Pawn(Point p, Player player) {
         super(p, player);
-        firstMove = true;
+        this.firstMove = true;
+        this.passant = false;
     }
 
 
@@ -24,24 +27,38 @@ public class Pawn extends Piece {
         int yDiff = this.getPos().y - this.getPrevPos().y;
         // The top player (p1) gets to move 2 tiles down the first time moving and then 1 tile.
         if (this.getPlayer().getNum() == 1) {
-            if (firstMove && yDiff <= 2 && yDiff >= 0 && xDiff == 0) {
+            if (this.firstMove && yDiff == 2 && xDiff == 0) {
+                this.firstMove = false;
+                this.passant = true;
+                System.out.println("Valid 2 move!");
+                return true;
+            }
+            if (this.firstMove && yDiff < 2 && yDiff >= 0 && xDiff == 0) {
                 this.firstMove = false;
                 return true;
             }
             if (yDiff <= 1 && yDiff >= 0 && xDiff == 0) {
                 this.firstMove = false;
+                this.passant = false;
                 return true;
             }
             return false;
         }
         // The bottom player (p2) gets to move 2 tiles up the first time moving and then 1 tile.
         else {
-            if (firstMove && yDiff >= -2 && yDiff <= 0 && xDiff == 0) {
+            if (this.firstMove && yDiff == -2 && xDiff == 0) {
+                this.firstMove = false;
+                this.passant = true;
+                System.out.println("Valid 2 move!");
+                return true;
+            }
+            if (this.firstMove && yDiff > -2 && yDiff <= 0 && xDiff == 0) {
                 this.firstMove = false;
                 return true;
             }
             if (yDiff >= -1 && yDiff <= 0 && xDiff == 0) {
                 this.firstMove = false;
+                this.passant = false;
                 return true;
             }
             return false;
@@ -62,6 +79,9 @@ public class Pawn extends Piece {
     }
     public String getPromoteTo() {
         return this.promoteTo;
+    }
+    public boolean getPassant() {
+        return this.passant;
     }
 
 }

@@ -59,9 +59,17 @@ public class Game {
                 }
                 // If the Pawn tries to move diagonally but there's nothing to capture
                 if (p instanceof Pawn && p.hasMoved() && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) == null) {
+                    // Passant check
+                    if (enPassantCheck(p) != null) {
+                        pToRemove = enPassantCheck(p);
+                        p.update();
+                        break;
+                    }
                     p.revert();
                     break;
                 }
+
+
                 // If the Pawn tries to capture vertically
                 if (p instanceof Pawn && p.hasMoved() && p.isValidMove() && pieceInSamePos(p) != null) {
                     p.revert();
@@ -84,7 +92,7 @@ public class Game {
                 if (p.hasMoved() && !p.isValidMove()) {
                     p.revert();
                 }
-                
+
             }
             // NULL!!!
             if (pToRemove != null) {
@@ -217,5 +225,12 @@ public class Game {
             }
         }
         return null;
+    }
+    public Piece enPassantCheck(Piece p) {
+        for (Piece p2: pieces) {
+            if (p2 instanceof Pawn && (Math.abs(p.getPos().y - p2.getPos().y) == 1 && Math.abs(p.getPos().x - p2.getPos().x) == 1 && ((Pawn)p2).getPassant())) {
+                return p2;
+            }
+        }return null;
     }
 }
