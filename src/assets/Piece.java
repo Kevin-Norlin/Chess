@@ -28,6 +28,9 @@ public class Piece extends Movable {
     public boolean isValidMove() {
         return true;
     }
+    public Player getPlayer() {
+        return this.player;
+    }
 
 
 

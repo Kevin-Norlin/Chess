@@ -2,10 +2,7 @@ package game;
 
 import assets.Piece;
 import assets.Tile;
-import assets.pieces.Bishop;
-import assets.pieces.King;
-import assets.pieces.Queen;
-import assets.pieces.Rook;
+import assets.pieces.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -39,15 +36,22 @@ public class Game {
         this.window = new GameWindow(panel);
 
         // Test pieces
-        Piece test = new King(new Point(1,1), p1);
+        Piece test = new Queen(new Point(1,1), p1);
         Piece test2 = new Rook(new Point(1,2), p2);
-        Piece bishop = new Bishop(new Point(2,3),p2);
+        Piece bishop = new Bishop(new Point(1,3),p2);
+        Piece pawnP2 = new Pawn(new Point(4,8),p2);
+        Piece pawnP1 = new Pawn(new Point(4,1),p1);
+
         panel.addPositionable(test);
         panel.addPositionable(test2);
         panel.addPositionable(bishop);
+        panel.addPositionable(pawnP1);
+        panel.addPositionable(pawnP2);
         pieces.add(test);
         pieces.add(test2);
         pieces.add(bishop);
+        pieces.add(pawnP1);
+        pieces.add(pawnP2);
     }
 
     public void startGame() {
