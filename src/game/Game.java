@@ -41,17 +41,21 @@ public class Game {
         Piece bishop = new Bishop(new Point(1,3),p2);
         Piece pawnP2 = new Pawn(new Point(4,8),p2);
         Piece pawnP1 = new Pawn(new Point(4,1),p1);
+        Piece kingP1 = new King(new Point(5,1),p1);
+
 
         panel.addPositionable(test);
         panel.addPositionable(test2);
         panel.addPositionable(bishop);
         panel.addPositionable(pawnP1);
         panel.addPositionable(pawnP2);
+        panel.addPositionable(kingP1);
         pieces.add(test);
         pieces.add(test2);
         pieces.add(bishop);
         pieces.add(pawnP1);
         pieces.add(pawnP2);
+        pieces.add(kingP1);
     }
 
     public void startGame() {
