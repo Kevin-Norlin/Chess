@@ -5,6 +5,7 @@ import assets.Tile;
 import assets.pieces.Bishop;
 import assets.pieces.King;
 import assets.pieces.Queen;
+import assets.pieces.Rook;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class Game {
 
         // Test pieces
         Piece test = new King(new Point(1,1), p1);
-        Piece test2 = new King(new Point(1,2), p2);
+        Piece test2 = new Rook(new Point(1,2), p2);
         Piece bishop = new Bishop(new Point(2,3),p2);
         panel.addPositionable(test);
         panel.addPositionable(test2);

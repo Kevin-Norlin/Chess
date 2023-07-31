@@ -62,7 +62,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.setLocation(xTile,yTile); // This is for the listener-events!
         System.out.println(this.getPos());
         if (this.getPos() != this.getPrevPos()) {
-            hasMoved = true;
+            this.hasMoved = true;
         }
 
     }
@@ -104,7 +104,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.hasMoved = false;
     }
     public boolean hasMoved() {
-        return hasMoved;
+        return this.hasMoved;
     }
     public void clearHasMoved() {
         this.hasMoved = false;

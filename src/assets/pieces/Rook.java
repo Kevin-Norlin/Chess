@@ -13,4 +13,11 @@ public class Rook extends Piece {
     public String getName() {
         return "Rook";
     }
+    // Vert / horizontal
+    public boolean isValidMove() {
+        if (this.getPos().x == this.getPrevPos().x || this.getPos().y == this.getPrevPos().y) {
+            return true;
+        }
+        return false;
+    }
 }
