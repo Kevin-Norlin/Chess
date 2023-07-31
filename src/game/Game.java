@@ -15,7 +15,7 @@ public class Game {
     private GamePanel panel;
     private ArrayList<Tile> chessBoard;
     private ArrayList<Piece> pieces;
-    public boolean validMove;
+
     public Game() {
         Player p1 = new Player(1);
         Player p2 = new Player(2);
@@ -69,7 +69,15 @@ public class Game {
                     t.clearTile();
                 }
             }
-            System.out.println(pieces.get(2).isValidMove());  //+ " Pos: " + pieces.get(2).getPos() + " " + "prevPos: " + pieces.get(2).getPrevPos());
+            for (Piece p : pieces) {
+                if (p.hasMoved() && p.isValidMove()) {
+                    p.update();
+                }
+                if (p.hasMoved() && !p.isValidMove()) {
+                    p.revert();
+                }
+            }
+            //System.out.println(pieces.get(2).isValidMove());  //+ " Pos: " + pieces.get(2).getPos() + " " + "prevPos: " + pieces.get(2).getPrevPos());
 
         }
     }

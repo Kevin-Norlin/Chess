@@ -11,7 +11,7 @@ import java.awt.event.MouseMotionListener;
 // Superclass for all components
 public abstract class Positionable extends JComponent {
     private int x, y, width, height;
-    private Point pos;
+    private Point pos, prevPos;
 
     // X,Y position is position on the PANEL
     // POINT position is position on the CHESSBOARD (size 8x8)
@@ -23,6 +23,7 @@ public abstract class Positionable extends JComponent {
         this.width = width;
         this.height = height;
         this.pos = pos;
+        this.prevPos = new Point(pos);
         setOpaque(false); // Allow mouse events to be detected
         setBounds(x, y, width, height); // Set the bounds of the component
         setBorder(BorderFactory.createTitledBorder(this.getClass().getName().substring(this.getClass().getName().lastIndexOf('.') + 1))); // Show the actual border
@@ -47,6 +48,9 @@ public abstract class Positionable extends JComponent {
     public Point getPos() {
         return this.pos;
     }
+    public Point getPrevPos() {
+        return this.prevPos;
+    }
 
     public void setX(int x) {
         this.x = x;
@@ -58,10 +62,15 @@ public abstract class Positionable extends JComponent {
     }
 
     public void setPos(Point p) {
-        this.pos = p;
+        this.pos = new Point(p);
         this.x = (p.x * Constants.SIZE) + 25;
         this.y = (p.y * Constants.SIZE) + 25;
     }
+    public void setPrevPos(Point p) {
+        this.prevPos = new Point(p);
+    }
+    public abstract void revert();
+    public abstract void update();
 
 
 }

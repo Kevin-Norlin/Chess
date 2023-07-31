@@ -15,12 +15,11 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     note that the logic uses x and y values
     on the panel and not the position on the chessboard.
      */
-    private Point prevPos;
+
     private Point initialClick;
+    private boolean hasMoved;
     public Movable(Point pos) {
         super(pos.x * Constants.SIZE + 25, pos.y * Constants.SIZE + 25, Constants.PIECE_SIZE, Constants.PIECE_SIZE, pos);
-        this.prevPos = new Point(pos);
-
         addMouseListener(this); // Register the mouse listener
         addMouseMotionListener(this);
     }
@@ -62,6 +61,9 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.setY(yTile);
         this.setLocation(xTile,yTile); // This is for the listener-events!
         System.out.println(this.getPos());
+        if (this.getPos() != this.getPrevPos()) {
+            hasMoved = true;
+        }
 
     }
     @Override
@@ -74,7 +76,6 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         System.out.println("Mouse exited");
     }
     @Override
-
     public void mouseDragged(MouseEvent e) {
         int x = this.getLocation().x + e.getX() - initialClick.x;
         int y = this.getLocation().y + e.getY() - initialClick.y;
@@ -92,8 +93,21 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
     }
-    public Point getPrevPos() {
-        return this.prevPos;
+
+    public void revert(){
+        setPos(this.getPrevPos());
+        this.hasMoved = false;
+        this.setLocation((this.getPrevPos().x * Constants.SIZE) + 25, (this.getPrevPos().y * Constants.SIZE) + 25); // This is for the listener-events!
+    }
+    public void update(){
+        setPrevPos(this.getPos());
+        this.hasMoved = false;
+    }
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+    public void clearHasMoved() {
+        this.hasMoved = false;
     }
 
 }
