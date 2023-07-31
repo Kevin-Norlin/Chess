@@ -8,30 +8,24 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-// Class for all movables
-public abstract class Movable extends Positionable implements MouseListener, MouseMotionListener {
-    private int x, y, width, height;
-    private Point initialClick;
 
-    public Movable(Point p, int width, int height) {
-        // X, y values are for the Panel
-        super(p.x * Constants.SIZE + 25, p.y * Constants.SIZE + 25, width, height, p);
+public abstract class Movable extends Positionable implements MouseListener, MouseMotionListener {
+    /*
+    This class handles the Listener events,
+    note that the logic uses x and y values
+    on the panel and not the position on the chessboard.
+     */
+    private Point prevPos;
+    private Point initialClick;
+    public Movable(Point pos) {
+        super(pos.x * Constants.SIZE + 25, pos.y * Constants.SIZE + 25, Constants.PIECE_SIZE, Constants.PIECE_SIZE, pos);
+        this.prevPos = pos;
         addMouseListener(this); // Register the mouse listener
         addMouseMotionListener(this);
     }
-
-
-
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
         System.out.println("Mouse clicked");
-
     }
 
     @Override
@@ -40,10 +34,10 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         initialClick = e.getPoint(); // Store the initial click position
     }
 
-    // TODO: collision logic with POINT values
+
     @Override
+    // Handles snapping
     public void mouseReleased(MouseEvent e) {
-        System.out.println("Released");
         int xTile = 125;
         int yTile = 125;
         int minDiff = 1000;
@@ -63,11 +57,11 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
                 yTile = Constants.TILES[i];
             }
         }
-
-        // Set the new position for the box
         this.setX(xTile);
         this.setY(yTile);
         this.setLocation(xTile,yTile); // This is for the listener-events!
+        System.out.println(this.getPos());
+
     }
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -79,6 +73,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         System.out.println("Mouse exited");
     }
     @Override
+
     public void mouseDragged(MouseEvent e) {
         int x = this.getLocation().x + e.getX() - initialClick.x;
         int y = this.getLocation().y + e.getY() - initialClick.y;
@@ -87,11 +82,13 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.setX(x);
         this.setY(y);
         this.setLocation(x,y); // This is for the listener-events!
+
     }
     @Override
     public void mouseMoved(MouseEvent e) {
     }
 
-
-
 }
+
+
+

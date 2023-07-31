@@ -2,6 +2,7 @@ package game;
 
 import assets.Piece;
 import assets.Tile;
+import assets.pieces.Bishop;
 import assets.pieces.King;
 
 import java.awt.*;
@@ -13,7 +14,11 @@ public class Game {
     private GamePanel panel;
     private ArrayList<Tile> chessBoard;
     private ArrayList<Piece> pieces;
+    public boolean validMove;
     public Game() {
+        Player p1 = new Player(1);
+        Player p2 = new Player(2);
+
         chessBoard = new ArrayList<>();
         pieces = new ArrayList<>();
         int size = SIZE;
@@ -31,11 +36,11 @@ public class Game {
         this.window = new GameWindow(panel);
 
         // Test pieces
-        Piece test = new King(new Point(1,1), 50,50, 1);
-        Piece test2 = new King(new Point(1,2), 50,50, 2);
+        Piece test = new King(new Point(1,1), p1);
+        Piece test2 = new King(new Point(1,2), p2);
+        Piece bishop = new Bishop(new Point(1,3),p2);
         panel.addPositionable(test);
         panel.addPositionable(test2);
-
         pieces.add(test);
         pieces.add(test2);
     }
@@ -43,8 +48,10 @@ public class Game {
     public void startGame() {
         // Game loop
         while (true) {
+
             boolean pieceFound;
             panel.repaint();
+
             // Check all tiles. Set pieces to the tiles they are over and clear the ones that have no piece.
             for (Tile t: chessBoard) {
                 pieceFound = false;
