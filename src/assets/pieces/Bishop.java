@@ -10,15 +10,17 @@ public class Bishop extends Piece {
     public Bishop(Point p, Player player) {
         super(p, player);
     }
+
     public String getName() {
         return "Bishop";
     }
 
     // Diagonally
-    public boolean isValidMove(Point newPos) {
-        int xDiff = Math.abs(this.getPos().x - newPos.x);
-        int yDiff = Math.abs(this.getPos().x - newPos.x);
-        if (this.getPos() == newPos || xDiff == yDiff) {
+    @Override
+    public boolean isValidMove() {
+        int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
+        int yDiff = Math.abs(this.getPos().y - this.getPrevPos().y);
+        if (xDiff == yDiff) {
             return true;
         }
         return false;

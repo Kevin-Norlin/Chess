@@ -25,6 +25,11 @@ public class Piece extends Movable {
         }
         g.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
     }
+    public boolean isValidMove() {
+        return true;
+    }
+
+
 
 
 

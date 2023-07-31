@@ -19,7 +19,8 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     private Point initialClick;
     public Movable(Point pos) {
         super(pos.x * Constants.SIZE + 25, pos.y * Constants.SIZE + 25, Constants.PIECE_SIZE, Constants.PIECE_SIZE, pos);
-        this.prevPos = pos;
+        this.prevPos = new Point(pos);
+
         addMouseListener(this); // Register the mouse listener
         addMouseMotionListener(this);
     }
@@ -86,6 +87,13 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     }
     @Override
     public void mouseMoved(MouseEvent e) {
+    }
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    }
+    public Point getPrevPos() {
+        return this.prevPos;
     }
 
 }

@@ -4,6 +4,7 @@ import assets.Piece;
 import assets.Tile;
 import assets.pieces.Bishop;
 import assets.pieces.King;
+import assets.pieces.Queen;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class Game {
         chessBoard = new ArrayList<>();
         pieces = new ArrayList<>();
         int size = SIZE;
+
         // Fill the list with all tiles in the chessBoard
         for (int r = size; r <= size * 8; r += size) {
             for (int c = size; c <= size * 8; c += size) {
@@ -38,11 +40,13 @@ public class Game {
         // Test pieces
         Piece test = new King(new Point(1,1), p1);
         Piece test2 = new King(new Point(1,2), p2);
-        Piece bishop = new Bishop(new Point(1,3),p2);
+        Piece bishop = new Bishop(new Point(2,3),p2);
         panel.addPositionable(test);
         panel.addPositionable(test2);
+        panel.addPositionable(bishop);
         pieces.add(test);
         pieces.add(test2);
+        pieces.add(bishop);
     }
 
     public void startGame() {
@@ -65,6 +69,8 @@ public class Game {
                     t.clearTile();
                 }
             }
+            System.out.println(pieces.get(2).isValidMove());  //+ " Pos: " + pieces.get(2).getPos() + " " + "prevPos: " + pieces.get(2).getPrevPos());
+
         }
     }
 }
