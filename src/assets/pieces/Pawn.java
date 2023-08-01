@@ -33,46 +33,54 @@ public class Pawn extends Piece {
                 System.out.println("Valid 2 move!");
                 return true;
             }
-            if (this.firstMove && yDiff < 2 && yDiff >= 0 && xDiff == 0) {
-                this.firstMove = false;
-                return true;
-            }
-            if (yDiff <= 1 && yDiff >= 0 && xDiff == 0) {
+
+            if (yDiff == 1 && xDiff == 0) {
                 this.firstMove = false;
                 this.passant = false;
+                System.out.println("Valid!");
                 return true;
             }
-            return false;
+            if (yDiff == 0 && xDiff == 0) {
+                return true;
+            }
         }
         // The bottom player (p2) gets to move 2 tiles up the first time moving and then 1 tile.
-        else {
+        else  {
             if (this.firstMove && yDiff == -2 && xDiff == 0) {
                 this.firstMove = false;
                 this.passant = true;
                 System.out.println("Valid 2 move!");
                 return true;
             }
-            if (this.firstMove && yDiff > -2 && yDiff <= 0 && xDiff == 0) {
-                this.firstMove = false;
-                return true;
-            }
-            if (yDiff >= -1 && yDiff <= 0 && xDiff == 0) {
+
+            if (yDiff == -1 && xDiff == 0) {
                 this.firstMove = false;
                 this.passant = false;
+                System.out.println("Valid!");
                 return true;
             }
-            return false;
+            if (yDiff == 0 && xDiff == 0) {
+                return true;
+            }
 
         }
+
+
+            return false;
+
+
     }
     // Returns true if the Pawn is moved diagonally
     public boolean isCaptureMove() {
+
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
         int yDiff = this.getPos().y - this.getPrevPos().y;
         if (this.getPlayer().getNum() == 1 && xDiff == 1 && yDiff == 1) {
+            System.out.println("CaptureMove1");
             return true;
         }
         if (this.getPlayer().getNum() == 2 && xDiff == 1 && yDiff == -1) {
+            System.out.println("CaptureMove2");
             return true;
         }
         return false;

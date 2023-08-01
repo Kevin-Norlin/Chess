@@ -51,31 +51,32 @@ public class Game {
             // Move pieces to new pos if its a valid move
 
             for (Piece p : pieces) {
-                // Special case for captures with Pawn
-                if (p instanceof Pawn && p.hasMoved() && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) != null) {
+
+                // Special cases for pawn
+                if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) == null) {
+                    p.update();
+                    break;
+                }
+                // Pawn tries to move diagonally but there's nothing to capture
+                if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) == null) {
+                    p.revert();
+                    break;
+                }
+                // Diagonally capture with pawn
+                if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) != null) {
                     pToRemove = pieceInSamePos(p);
                     p.update();
                     break;
                 }
-                // If the Pawn tries to move diagonally but there's nothing to capture
-                if (p instanceof Pawn && p.hasMoved() && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) == null) {
-                    // Passant check
-                    if (enPassantCheck(p) != null) {
-                        pToRemove = enPassantCheck(p);
-                        p.update();
-                        break;
-                    }
-                    p.revert();
-                    break;
-                }
-
 
                 // If the Pawn tries to capture vertically
-                if (p instanceof Pawn && p.hasMoved() && p.isValidMove() && pieceInSamePos(p) != null) {
+                if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) != null) {
                     p.revert();
                     break;
                 }
 
+
+                // All other Pieces
                 if (p.hasMoved() && p.isValidMove()) { // Check all pieces if they have made a valid move
                     // Check if any Pieces have been knocked out
                     for (Piece p2 : pieces) {
@@ -90,11 +91,13 @@ public class Game {
                     p.update();
                 }
                 if (p.hasMoved() && !p.isValidMove()) {
+                    System.out.println("Reverted at bottom");
                     p.revert();
                 }
 
+
             }
-            // NULL!!!
+            // Remove the piece that has been marked for removal
             if (pToRemove != null) {
                 pieces.remove(pToRemove);
                 panel.removePositionable(pToRemove);
@@ -119,6 +122,8 @@ public class Game {
                     }
                 }
             }
+
+
 
 
         }
@@ -220,7 +225,7 @@ public class Game {
     }
     public Piece pieceInSamePos(Piece p) {
         for (Piece piece : pieces) {
-            if (p.getPos().equals(piece.getPos()) && !p.equals(piece)) {
+            if (p.getPos().x == piece.getPos().x && p.getPos().y == piece.getPos().y && !p.equals(piece)) {
                 return piece;
             }
         }

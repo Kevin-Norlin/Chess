@@ -20,6 +20,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     private boolean hasMoved;
     public Movable(Point pos) {
         super(pos.x * Constants.SIZE + 25, pos.y * Constants.SIZE + 25, Constants.PIECE_SIZE, Constants.PIECE_SIZE, pos);
+        this.hasMoved = false;
         addMouseListener(this); // Register the mouse listener
         addMouseMotionListener(this);
     }
@@ -100,8 +101,9 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.setLocation((this.getPrevPos().x * Constants.SIZE) + 25, (this.getPrevPos().y * Constants.SIZE) + 25); // This is for the listener-events!
     }
     public void update(){
-        setPrevPos(this.getPos());
         this.hasMoved = false;
+        setPrevPos(this.getPos());
+
     }
     public boolean hasMoved() {
         return this.hasMoved;
