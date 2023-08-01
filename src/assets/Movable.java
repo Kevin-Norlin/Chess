@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 
 
 public abstract class Movable extends Positionable implements MouseListener, MouseMotionListener {
@@ -17,6 +18,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
      */
 
     private Point initialClick;
+
     private boolean hasMoved;
     public Movable(Point pos) {
         super(pos.x * Constants.SIZE + 25, pos.y * Constants.SIZE + 25, Constants.PIECE_SIZE, Constants.PIECE_SIZE, pos);
@@ -111,6 +113,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     public void clearHasMoved() {
         this.hasMoved = false;
     }
+
 
 }
 

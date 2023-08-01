@@ -49,9 +49,12 @@ public class Game {
             checkTiles();
 
             // Move pieces to new pos if its a valid move
-
             for (Piece p : pieces) {
-
+                if (p.hasMoved() && p instanceof Rook && ((Rook) p).collisionInPath(pieces)){
+                    System.out.println("Collision on rook!");
+                    p.revert();
+                    break;
+                }
                 // Special cases for pawn
                 if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) == null) {
                     p.update();
@@ -128,6 +131,40 @@ public class Game {
 
         }
     }
+
+
+    public void checkTiles() {
+        boolean pieceFound;
+        // Check all tiles. Set pieces to the tiles they are over and clear the ones that have no piece.
+        for (Tile t: chessBoard) {
+            pieceFound = false;
+            for (Piece p : pieces) {
+                if (t.checkTile(p)) {
+                    t.setPiece(p);
+                    pieceFound = true;
+                }
+            }
+            if (!pieceFound) {
+                t.clearTile();
+            }
+        }
+    }
+    public Piece pieceInSamePos(Piece p) {
+        for (Piece piece : pieces) {
+            if (p.getPos().x == piece.getPos().x && p.getPos().y == piece.getPos().y && !p.equals(piece)) {
+                return piece;
+            }
+        }
+        return null;
+    }
+    public Piece enPassantCheck(Piece p) {
+        for (Piece p2: pieces) {
+            if (p2 instanceof Pawn && (Math.abs(p.getPos().y - p2.getPos().y) == 1 && Math.abs(p.getPos().x - p2.getPos().x) == 1 && ((Pawn)p2).getPassant())) {
+                return p2;
+            }
+        }return null;
+    }
+
     public void fillBoard() {
         // Create pieces for Player 1 (p1) and add them to the panel and pieces array
         Piece kingP1 = new King(new Point(5, 1), p1);
@@ -207,35 +244,7 @@ public class Game {
             pieces.add(pawnP2);
         }
     }
-    public void checkTiles() {
-        boolean pieceFound;
-        // Check all tiles. Set pieces to the tiles they are over and clear the ones that have no piece.
-        for (Tile t: chessBoard) {
-            pieceFound = false;
-            for (Piece p : pieces) {
-                if (t.checkTile(p)) {
-                    t.setPiece(p);
-                    pieceFound = true;
-                }
-            }
-            if (!pieceFound) {
-                t.clearTile();
-            }
-        }
-    }
-    public Piece pieceInSamePos(Piece p) {
-        for (Piece piece : pieces) {
-            if (p.getPos().x == piece.getPos().x && p.getPos().y == piece.getPos().y && !p.equals(piece)) {
-                return piece;
-            }
-        }
-        return null;
-    }
-    public Piece enPassantCheck(Piece p) {
-        for (Piece p2: pieces) {
-            if (p2 instanceof Pawn && (Math.abs(p.getPos().y - p2.getPos().y) == 1 && Math.abs(p.getPos().x - p2.getPos().x) == 1 && ((Pawn)p2).getPassant())) {
-                return p2;
-            }
-        }return null;
-    }
+
 }
+
+

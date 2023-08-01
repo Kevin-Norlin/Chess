@@ -31,6 +31,12 @@ public class Piece extends Movable {
     public Player getPlayer() {
         return this.player;
     }
+    public boolean collisionCheck(Piece p) {
+        if (this.getPos().equals(p.getPos()) && !this.player.equals(p.getPlayer())) {
+            return true;
+        }
+        return false;
+    }
 
 
 
