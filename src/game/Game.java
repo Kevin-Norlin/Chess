@@ -17,7 +17,7 @@ public class Game {
     private Player p1,p2, currentPlayer;;
 
     private Piece pToRemove;
-    private boolean event;
+    private boolean event; // If a move has been made.
 
     public Game() {
         p1 = new Player(1);
@@ -52,9 +52,10 @@ public class Game {
 
         // Game loop
         while (true) {
-
+            currentPlayer.startTimer();
             panel.repaint();
             checkTiles();
+
             // Move pieces to new pos if its a valid move
             for (Piece p : pieces) {
                 if (p.hasMoved() && !p.getPlayer().equals(this.currentPlayer)) {
@@ -66,12 +67,10 @@ public class Game {
                     p.revert();
                     break;
                 }
-
                 // Special cases for the pawn
                 if (pawnCheck(p)) {
                     break;
                 }
-
                 // All other Pieces
                 if (p.hasMoved() && p.isValidMove()) { // Check all pieces if they have made a valid move
                     // Check if any Pieces have been knocked out
@@ -120,6 +119,7 @@ public class Game {
                 }
             }
             if (this.event) {
+                currentPlayer.stopTimer();
                 this.currentPlayer = this.currentPlayer.getNum() == 1 ? this.p2 : this.p1;
                 this.panel.displayPlayer(this.currentPlayer);
                 toggleEvent();

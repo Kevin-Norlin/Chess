@@ -36,6 +36,8 @@ public class GamePanel extends JPanel {
         Font boldFont = new Font("Planc", Font.BOLD, 20);
         g.setFont(boldFont);
         g.drawString(this.player.getNum() == 1 ? "Player 1" : "Player 2",50,50);
+        String time = this.player.getRemainingTimeAsString();
+        g.drawString(time, 25, 100);
         Font smallFont = new Font("Planc",Font.CENTER_BASELINE, 12);
         g.setFont(smallFont);
         // Draw chessBoard
