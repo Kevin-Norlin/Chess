@@ -1,6 +1,6 @@
 # Chess
+This is a simple chess game implemented using Java Swing utilities. The game has been developed from scratch and allows players to play a classic game of chess on the graphical user interface.
 ## Features
-
 * Player vs. Player mode: Two players can take turns making their moves.
 * Classic chess rules: The game follows the standard rules of chess, including piece movements, captures, check, and checkmate.
 * Legal move validation: The game ensures that only valid moves are allowed and enforces the rules of chess.
