@@ -25,70 +25,53 @@ public class Rook extends Piece {
     // Cursed collision code skull
     // TODO: Needs to handle case when capturing pieces.
     public boolean collisionInPath(ArrayList<Piece> pieces) {
-        boolean collisionFound = false;
-        boolean thisFound = false;
-        Point start = new Point(this.getPrevPos());
-        Point end = new Point(this.getPos());
-        // Check vertically to right
-        for (int x = start.x; x <= end.x; x++ ) {
-            for (int i = 0; i < pieces.size(); i++) {
-                if (x == pieces.get(i).getPos().x && end.y == pieces.get(i).getPos().y && !pieces.get(i).equals(this)) {
-                    collisionFound = true;
-                }
-                if (end.x == x && start.y == end.y) {
-                    thisFound = true;
+        int startX = this.getPrevPos().x;
+        int startY = this.getPrevPos().y;
+        int endX = this.getPos().x;
+        int endY = this.getPos().y;
+        Player player = this.getPlayer();
+
+
+        for (Piece piece : pieces) {
+            // Skip the current piece in the loop
+            if (piece.equals(this)) {
+                continue;
+            }
+
+            int pieceStartX = piece.getPrevPos().x;
+            int pieceStartY = piece.getPrevPos().y;
+            int pieceEndX = piece.getPos().x;
+            int pieceEndY = piece.getPos().y;
+            Player piecePlayer = piece.getPlayer();
+
+            // Check if there is a piece on the same column as this and the rook is moving vertically
+            if (startX == endX && startX == pieceStartX) {
+                if ((startY <= pieceStartY && endY >= pieceStartY) || (startY >= pieceStartY && endY <= pieceStartY)) {
+                    // If the collision is on the end position and the player is of the other team, return true
+                    if (endY == pieceEndY && !player.equals(piecePlayer)) {
+                        // Capture opponent's piece
+                        continue;
+                    }
+                    return true; // Collision without capture
                 }
             }
-        }
-        if (!thisFound) {
-            collisionFound = false;
-            // Check vertically to the left
-            for (int x = start.x; x >= end.x; x--) {
-                for (int i = 0; i < pieces.size(); i++) {
-                    if (x == pieces.get(i).getPos().x && end.y == pieces.get(i).getPos().y && !pieces.get(i).equals(this)) {
-                        collisionFound = true;
+
+            // Check if there is a piece on the same row as this and the rook is moving horizontally
+            if (startY == endY && startY == pieceStartY) {
+                if ((startX <= pieceStartX && endX >= pieceStartX) || (startX >= pieceStartX && endX <= pieceStartX)) {
+                    // If the collision is on the end position and the player is of the other team, return true
+                    if (endX == pieceEndX && !player.equals(piecePlayer)) {
+                        // Capture opponent's piece
+                        continue;
                     }
-                    if (end.x == x && start.y == end.y) {
-                        thisFound = true;
-                    }
+                    return true; // Collision without capture
                 }
             }
         }
 
-        if (collisionFound && thisFound) {
-            System.out.println("X collision found");
-            return true;
-        }
-        // Check horizantally from top
-        thisFound = false;
-        collisionFound = false;
-        for (int y = start.y; y <= end.y; y++) {
-            for (int i = 0; i < pieces.size(); i++) {
-                if (y == pieces.get(i).getPos().y && end.x == pieces.get(i).getPos().x && !pieces.get(i).equals(this)) {
-                    collisionFound = true;
-                } if (end.y == y && start.x == end.x) {
-                    thisFound = true;
-                }
-            }
-        }
-        if (!thisFound) {
-            // Check horizontally from bottom
-            collisionFound = false;
-            for (int y = start.y; y >= end.y; y--) {
-                for (int i = 0; i < pieces.size(); i++) {
-                    if (y == pieces.get(i).getPos().y && end.x == pieces.get(i).getPos().x && !pieces.get(i).equals(this)) {
-                        collisionFound = true;
-                    } if (end.y == y && start.x == end.x) {
-                        thisFound = true;
-                    }
-                }
-            }
-        }
-        if (collisionFound && thisFound) {
-            System.out.println("Y collision found");
-            return true;
-        }
-        return false;
+        return false; // No collision
+
+
     }
 
 }

@@ -77,6 +77,11 @@ public class Game {
                     p.revert();
                     break;
                 }
+                if (p.hasMoved() && p instanceof Queen && ((Queen) p).collisionInPath(pieces)) {
+                    System.out.println("Collision on Queen!");
+                    p.revert();
+                    break;
+                }
 
 
                 // All other Pieces
