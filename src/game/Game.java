@@ -15,6 +15,7 @@ public class Game {
     private ArrayList<Tile> chessBoard;
     private ArrayList<Piece> pieces;
     private Player p1,p2;
+    private Piece pToRemove;
 
     public Game() {
         p1 = new Player(1);
@@ -44,7 +45,7 @@ public class Game {
     }
 
     public void startGame() {
-        Piece pToRemove = null;
+        pToRemove = null;
         // Game loop
         while (true) {
 
@@ -58,27 +59,9 @@ public class Game {
                     p.revert();
                     break;
                 }
-                // Special cases for pawn
-                if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) == null) {
-                    p.update();
-                    break;
-                }
-                // Pawn tries to move diagonally but there's nothing to capture
-                if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) == null) {
-                    p.revert();
-                    break;
-                }
-                // Diagonally capture with pawn
-                if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && !pieceInSamePos(p).getPlayer().equals(p.getPlayer())) {
-                    pToRemove = pieceInSamePos(p);
-                    ((Pawn) p).setFirstMove();
-                    p.update();
-                    break;
-                }
 
-                // If the Pawn tries to capture vertically
-                if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) != null) {
-                    p.revert();
+                // Special cases for the pawn
+                if (pawnCheck(p)) {
                     break;
                 }
 
@@ -153,7 +136,7 @@ public class Game {
             }
         }
     }
-    public Piece pieceInSamePos(Piece p) {
+    private Piece pieceInSamePos(Piece p) {
         for (Piece piece : pieces) {
             if (p.getPos().x == piece.getPos().x && p.getPos().y == piece.getPos().y && !p.equals(piece)) {
                 return piece;
@@ -161,6 +144,34 @@ public class Game {
         }
         return null;
     }
+
+    private boolean pawnCheck(Piece p) {
+        // Special cases for pawn
+        if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) == null) {
+            p.update();
+            return true;
+        }
+        // Pawn tries to move diagonally but there's nothing to capture
+        if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) == null) {
+            p.revert();
+            return true;
+        }
+        // Diagonally capture with pawn
+        if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && !pieceInSamePos(p).getPlayer().equals(p.getPlayer())) {
+            this.pToRemove = pieceInSamePos(p);
+            ((Pawn) p).setFirstMove();
+            p.update();
+            return true;
+        }
+
+        // If the Pawn tries to capture vertically
+        if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) != null) {
+            p.revert();
+            return true;
+        }
+        return false;
+    }
+
     public Piece enPassantCheck(Piece p) {
         for (Piece p2: pieces) {
             if (p2 instanceof Pawn && (Math.abs(p.getPos().y - p2.getPos().y) == 1 && Math.abs(p.getPos().x - p2.getPos().x) == 1 && ((Pawn)p2).getPassant())) {
