@@ -19,15 +19,6 @@ public class Piece extends Movable {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        /*
-        if (this.player.getNum() == 1) {
-            g.setColor(Color.blue);
-        } else {
-            g.setColor(Color.red);
-        }
-        g.fillRect(this.getX(), this.getY(), getWidth(), getHeight());
-
-         */
     }
     public boolean isValidMove() {
         return true;
