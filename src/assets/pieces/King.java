@@ -5,10 +5,11 @@ import assets.Piece;
 import game.Player;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class King extends Piece {
     public King(Point p, Player player) {
-        super(p, player);
+        super(p, player, player.getNum() == 1 ? "/image/b_king.png" : "/image/w_king.png");
     }
     public String getName() {
         return "King";
@@ -22,4 +23,5 @@ public class King extends Piece {
         return false;
 
     }
+
 }

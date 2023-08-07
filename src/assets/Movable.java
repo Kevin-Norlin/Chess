@@ -20,8 +20,8 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     private Point initialClick;
 
     private boolean hasMoved;
-    public Movable(Point pos) {
-        super(pos.x * Constants.SIZE + 25, pos.y * Constants.SIZE + 25, Constants.PIECE_SIZE, Constants.PIECE_SIZE, pos);
+    public Movable(Point pos, String imgPath) {
+        super(pos.x * Constants.SIZE + 25, pos.y * Constants.SIZE + 25, Constants.PIECE_SIZE, Constants.PIECE_SIZE, pos, imgPath);
         this.hasMoved = false;
         addMouseListener(this); // Register the mouse listener
         addMouseMotionListener(this);

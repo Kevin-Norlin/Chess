@@ -7,8 +7,11 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Queen extends Piece {
+
+
     public Queen(Point p, Player player) {
-        super(p, player);
+        super(p, player, player.getNum() == 1 ? "/image/b_queen.png" : "/image/w_queen.png");
+
     }
     public String getName() {
         return "Queen";
@@ -26,6 +29,7 @@ public class Queen extends Piece {
         return false;
     }
 
+    @Override
     public boolean collisionInPath(ArrayList<Piece> pieces) {
         int startX = this.getPrevPos().x;
         int startY = this.getPrevPos().y;

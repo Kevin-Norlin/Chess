@@ -4,11 +4,12 @@ import assets.Piece;
 import game.Player;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 // "Springare"
 public class Knight extends Piece {
     public Knight(Point p, Player player) {
-        super(p, player);
+        super(p, player, player.getNum() == 1 ? "/image/b_knight.png" : "/image/w_knight.png");
     }
     public String getName() {
         return "Knight";
@@ -23,4 +24,5 @@ public class Knight extends Piece {
         return false;
 
     }
+
 }

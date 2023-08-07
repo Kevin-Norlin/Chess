@@ -9,6 +9,8 @@ public class Constants {
     public static final Color TILE_COLOR_DARK = new Color(0xB58863);
     public static final int SIZE = 100;
     public static final int PIECE_SIZE = 50;
+    public static final String IMG_PATH = "/image/";
+
 
 }
 

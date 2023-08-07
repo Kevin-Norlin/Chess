@@ -2,22 +2,25 @@ package assets;
 
 import constants.Constants;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 
 // Superclass for all components
 public abstract class Positionable extends JComponent {
     private int x, y, width, height;
     private Point pos, prevPos;
+    private Image image;
 
     // X,Y position is position on the PANEL
     // POINT position is position on the CHESSBOARD (size 8x8)
     // setX() and setY() also sets the appropriate pos on the chessboard.
     // setPos() also sets the appropriate x and y values on the panel.
-    public Positionable(int x, int y, int width, int height, Point pos) {
+    public Positionable(int x, int y, int width, int height, Point pos, String imgPath) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -26,12 +29,22 @@ public abstract class Positionable extends JComponent {
         this.prevPos = new Point(pos);
         setOpaque(false); // Allow mouse events to be detected
         setBounds(x, y, width, height); // Set the bounds of the component
-        setBorder(BorderFactory.createTitledBorder(this.getClass().getName().substring(this.getClass().getName().lastIndexOf('.') + 1))); // Show the actual border
+        //setBorder(BorderFactory.createTitledBorder(this.getClass().getName().substring(this.getClass().getName().lastIndexOf('.') + 1))); // Show the actual border
 
+        // Load images
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream(imgPath));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        if (image != null) {
+            g.drawImage(image, this.getX() -4 , this.getY() -4, getWidth() + 12 , getHeight() + 12, this);
+        }
+
     }
     public int getX() {
         return this.x;
@@ -46,10 +59,10 @@ public abstract class Positionable extends JComponent {
         return this.height;
     }
     public Point getPos() {
-        return this.pos;
+        return new Point(this.pos);
     }
     public Point getPrevPos() {
-        return this.prevPos;
+        return new Point(this.prevPos);
     }
 
     public void setX(int x) {

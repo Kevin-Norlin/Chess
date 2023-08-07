@@ -4,6 +4,7 @@ import assets.Piece;
 import game.Player;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 // "Bonde"
 public class Pawn extends Piece {
@@ -12,7 +13,7 @@ public class Pawn extends Piece {
     private String promoteTo;
 
     public Pawn(Point p, Player player) {
-        super(p, player);
+        super(p, player, player.getNum() == 1 ? "/image/b_pawn.png" : "/image/w_pawn.png");
         this.firstMove = true;
         this.passant = false;
     }
@@ -85,11 +86,46 @@ public class Pawn extends Piece {
         }
         return false;
     }
+
+    @Override
+    public boolean collisionInPath(ArrayList<Piece> pieces) {
+        int startX = this.getPrevPos().x;
+        int startY = this.getPrevPos().y;
+        int endX = this.getPos().x;
+        int endY = this.getPos().y;
+        int diffX = Math.abs(startX - endX);
+        int diffY = Math.abs(startY - endY);
+
+        for (Piece piece: pieces) {
+            if (piece.equals(this)) {
+                continue;
+            }
+            int pieceX = piece.getPos().x;
+            int pieceY = piece.getPos().y;
+            if (this.getPlayer().getNum() == 1 && diffX == 0 && diffY == 2) {
+                // If the piece is between the old and the new Y pos on the first "2 move"
+                if (pieceX == startX && pieceY == endY - 1) {
+                    return true;
+                }
+            } if (this.getPlayer().getNum() == 2 && diffX == 0 && diffY == 2) {
+                // If the piece is between the old and the new Y pos on the first "2 move"
+                if (pieceX == endX && pieceY == endY + 1) {
+                    return true;
+                }
+            }
+        } return false;
+    }
+
+
+
     public String getPromoteTo() {
         return this.promoteTo;
     }
     public boolean getPassant() {
         return this.passant;
+    }
+    public void setFirstMove() {
+        this.firstMove = false;
     }
 
 }

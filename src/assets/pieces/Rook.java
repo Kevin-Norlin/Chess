@@ -9,7 +9,7 @@ import java.util.ArrayList;
 // "Torn"
 public class Rook extends Piece {
     public Rook(Point p, Player player) {
-        super(p, player);
+        super(p, player, player.getNum() == 1 ? "/image/b_rook.png" : "/image/w_rook.png");
     }
     public String getName() {
         return "Rook";
@@ -22,8 +22,8 @@ public class Rook extends Piece {
         }
         return false;
     }
-    // Cursed collision code skull
-    // TODO: Needs to handle case when capturing pieces.
+
+    @Override
     public boolean collisionInPath(ArrayList<Piece> pieces) {
         int startX = this.getPrevPos().x;
         int startY = this.getPrevPos().y;

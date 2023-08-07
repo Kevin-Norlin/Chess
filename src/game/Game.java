@@ -50,8 +50,8 @@ public class Game {
 
             // Move pieces to new pos if its a valid move
             for (Piece p : pieces) {
-                if (p.hasMoved() && p instanceof Rook && ((Rook) p).collisionInPath(pieces)){
-                    System.out.println("Collision on rook!");
+                if (p.hasMoved() && p.collisionInPath(pieces)){
+                    System.out.println("Collision!");
                     p.revert();
                     break;
                 }
@@ -66,19 +66,15 @@ public class Game {
                     break;
                 }
                 // Diagonally capture with pawn
-                if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) != null) {
+                if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && !pieceInSamePos(p).getPlayer().equals(p.getPlayer())) {
                     pToRemove = pieceInSamePos(p);
+                    ((Pawn) p).setFirstMove();
                     p.update();
                     break;
                 }
 
                 // If the Pawn tries to capture vertically
                 if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) != null) {
-                    p.revert();
-                    break;
-                }
-                if (p.hasMoved() && p instanceof Queen && ((Queen) p).collisionInPath(pieces)) {
-                    System.out.println("Collision on Queen!");
                     p.revert();
                     break;
                 }
