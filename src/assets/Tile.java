@@ -34,7 +34,7 @@ public class Tile extends JComponent {
         g.setColor(this.color);
         g.fillRect(getX(),getY(),getWidth(),getHeight());
         if (this.piece != null) {
-            g.drawString("P: " + this.piece.getName(), this.getX(), this.getY());
+            g.drawString(this.piece.getName(), this.getX(), this.getY());
         }
         super.paintComponent(g);
     }

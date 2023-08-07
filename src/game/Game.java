@@ -14,13 +14,15 @@ public class Game {
     private GamePanel panel;
     private ArrayList<Tile> chessBoard;
     private ArrayList<Piece> pieces;
-    private Player p1,p2;
+    private Player p1,p2, currentPlayer;;
+
     private Piece pToRemove;
+    private boolean event;
 
     public Game() {
         p1 = new Player(1);
         p2 = new Player(2);
-
+        currentPlayer = p1;
         chessBoard = new ArrayList<>();
         pieces = new ArrayList<>();
         int size = SIZE;
@@ -38,6 +40,7 @@ public class Game {
         this.panel = new GamePanel(chessBoard);
         this.window = new GameWindow(panel);
         fillBoard();
+        this.panel.displayPlayer(this.currentPlayer);
 
 
 
@@ -46,14 +49,18 @@ public class Game {
 
     public void startGame() {
         pToRemove = null;
+
         // Game loop
         while (true) {
 
             panel.repaint();
             checkTiles();
-
             // Move pieces to new pos if its a valid move
             for (Piece p : pieces) {
+                if (p.hasMoved() && !p.getPlayer().equals(this.currentPlayer)) {
+                    p.revert();
+                    break;
+                }
                 if (p.hasMoved() && p.collisionInPath(pieces)){
                     System.out.println("Collision!");
                     p.revert();
@@ -64,7 +71,6 @@ public class Game {
                 if (pawnCheck(p)) {
                     break;
                 }
-
 
                 // All other Pieces
                 if (p.hasMoved() && p.isValidMove()) { // Check all pieces if they have made a valid move
@@ -79,6 +85,7 @@ public class Game {
                         }
                     }
                     p.update();
+                    toggleEvent();
                 }
                 if (p.hasMoved() && !p.isValidMove()) {
                     System.out.println("Reverted at bottom");
@@ -112,8 +119,11 @@ public class Game {
                     }
                 }
             }
-
-
+            if (this.event) {
+                this.currentPlayer = this.currentPlayer.getNum() == 1 ? this.p2 : this.p1;
+                this.panel.displayPlayer(this.currentPlayer);
+                toggleEvent();
+            }
 
 
         }
@@ -149,6 +159,7 @@ public class Game {
         // Special cases for pawn
         if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) == null) {
             p.update();
+            toggleEvent();
             return true;
         }
         // Pawn tries to move diagonally but there's nothing to capture
@@ -161,12 +172,14 @@ public class Game {
             this.pToRemove = pieceInSamePos(p);
             ((Pawn) p).setFirstMove();
             p.update();
+            toggleEvent();
             return true;
         }
 
         // If the Pawn tries to capture vertically
         if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) != null) {
             p.revert();
+            toggleEvent();
             return true;
         }
         return false;
@@ -258,6 +271,9 @@ public class Game {
             panel.addPositionable(pawnP2);
             pieces.add(pawnP2);
         }
+    }
+    public void toggleEvent() {
+        this.event = !this.event;
     }
 
 }

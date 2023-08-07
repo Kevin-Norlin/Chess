@@ -27,8 +27,17 @@ public class Piece extends Movable {
         return this.player;
     }
     public boolean collisionInPath(ArrayList<Piece> pieces) {
-        return false;
+        for (Piece p: pieces) {
+            if (p.equals(this)) {
+                continue;
+            }
+            // If the piece tries to move to the same tile as another friendly piece
+            if (this.getPos().x == p.getPos().x && this.getPos().y == p.getPos().y && this.getPlayer().equals(p.getPlayer())) {
+                return true;
+            }
+        } return false;
     }
+
 
 
 

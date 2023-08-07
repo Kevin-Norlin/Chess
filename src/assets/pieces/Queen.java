@@ -7,11 +7,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Queen extends Piece {
-
-
     public Queen(Point p, Player player) {
         super(p, player, player.getNum() == 1 ? "/image/b_queen.png" : "/image/w_queen.png");
-
     }
     public String getName() {
         return "Queen";
@@ -43,7 +40,6 @@ public class Queen extends Piece {
             if (piece.equals(this)) {
                 continue;
             }
-
             int pieceStartX = piece.getPrevPos().x;
             int pieceStartY = piece.getPrevPos().y;
             int pieceEndX = piece.getPos().x;
@@ -55,7 +51,7 @@ public class Queen extends Piece {
                 if ((startY <= pieceStartY && endY >= pieceStartY) || (startY >= pieceStartY && endY <= pieceStartY)) {
                     // If the collision is on the end position and the player is of the other team, return true
                     if (endY == pieceEndY && !player.equals(piecePlayer)) {
-                        // Capture opponent's piece
+                        // Capture opponents piece
                         continue;
                     }
                     return true; // Collision without capture
@@ -79,10 +75,8 @@ public class Queen extends Piece {
                 if (Math.abs(pieceStartX - pieceEndX) == Math.abs(pieceStartY - pieceEndY)) {
                     int dx = (startX < endX) ? 1 : -1;
                     int dy = (startY < endY) ? 1 : -1;
-
                     int x = startX + dx;
                     int y = startY + dy;
-
                     while (x != endX && y != endY) {
                         if (x == pieceStartX && y == pieceStartY) {
                             // If there is a piece blocking the diagonal path, return true (collision)
@@ -91,7 +85,6 @@ public class Queen extends Piece {
                         x += dx;
                         y += dy;
                     }
-
                     // If there is a piece at the end position and the player is of the other team, return false (valid capture)
                     if (endX == pieceEndX && endY == pieceEndY && !player.equals(piecePlayer)) {
                         continue;

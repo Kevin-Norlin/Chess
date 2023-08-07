@@ -16,7 +16,6 @@ public class Rook extends Piece {
     }
     // Vert / horizontal as many tiles as possible
     public boolean isValidMove() {
-
         if (this.getPos().x == this.getPrevPos().x || this.getPos().y == this.getPrevPos().y) {
             return true;
         }

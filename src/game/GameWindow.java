@@ -17,6 +17,7 @@ public class GameWindow extends JFrame {
 
         // Text above the chess board
         JLabel title = new JLabel("Chess");
+        JLabel currentPlayer = new JLabel("Player 1");
         Font font = new Font("Planc", Font.BOLD,40);
         title.setFont(font);
 
@@ -36,4 +37,5 @@ public class GameWindow extends JFrame {
         setVisible(true);
         System.out.println(this.getSize());
     }
+
 }
