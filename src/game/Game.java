@@ -4,6 +4,7 @@ import assets.Piece;
 import assets.Tile;
 import assets.pieces.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import static constants.Constants.*;
@@ -36,6 +37,8 @@ public class Game {
         this.panel = new GamePanel(chessBoard);
         this.window = new GameWindow(panel);
         fillBoard();
+
+
 
 
     }

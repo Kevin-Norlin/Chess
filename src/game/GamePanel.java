@@ -9,15 +9,18 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel {
     private final ArrayList<Movable> movables;
     private final ArrayList<Tile> chessBoard;
+
     public GamePanel(ArrayList<Tile> chessBoard) {
         // All pieces in the game
         movables = new ArrayList<>();
         this.chessBoard = chessBoard;
     }
+
     public void addPositionable(Movable m) {
         movables.add(m);
         add(m); // Add the Positionable object as a child component to the GamePanel
     }
+
     public void removePositionable(Movable m) {
         movables.remove(m);
         remove(m);
@@ -36,12 +39,5 @@ public class GamePanel extends JPanel {
         for (Movable m : movables) {
             m.paintComponent(g);
         }
-
-
-
-
-
-
-
     }
 }
