@@ -37,7 +37,7 @@ public class Game {
                 }
             }
         }
-        this.panel = new GamePanel(chessBoard);
+        this.panel = new GamePanel(chessBoard, p1,p2);
         this.window = new GameWindow(panel);
         fillBoard();
         this.panel.displayPlayer(this.currentPlayer);

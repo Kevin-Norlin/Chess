@@ -9,14 +9,14 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel {
     private final ArrayList<Movable> movables;
     private final ArrayList<Tile> chessBoard;
-    private Player player;
+    private Player p1,p2;
 
-    public GamePanel(ArrayList<Tile> chessBoard) {
+    public GamePanel(ArrayList<Tile> chessBoard, Player p1, Player p2) {
         // All pieces in the game
         movables = new ArrayList<>();
         this.chessBoard = chessBoard;
-        this.player = new Player(1);
-
+        this.p1 = p1;
+        this.p2 = p2;
     }
 
     public void addPositionable(Movable m) {
@@ -32,12 +32,14 @@ public class GamePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Draw player
+        // Draw players
         Font boldFont = new Font("Planc", Font.BOLD, 20);
         g.setFont(boldFont);
-        g.drawString(this.player.getNum() == 1 ? "Player 1" : "Player 2",50,50);
-        String time = this.player.getRemainingTimeAsString();
-        g.drawString(time, 25, 100);
+        g.drawString("Black  " + p1.getRemainingTimeAsString() ,50,50);
+        g.drawString("White  " + p2.getRemainingTimeAsString(), 50,950);
+
+
+
         Font smallFont = new Font("Planc",Font.CENTER_BASELINE, 12);
         g.setFont(smallFont);
         // Draw chessBoard
@@ -52,6 +54,6 @@ public class GamePanel extends JPanel {
         }
     }
     public void displayPlayer(Player player) {
-        this.player = player;
+
     }
 }

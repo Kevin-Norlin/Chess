@@ -64,7 +64,7 @@ public class Player {
     }
 
     public String getRemainingTimeAsString() {
-        long remainingTime = isTimerRunning ? TIME - this.elapsedTime : TIME;
+        long remainingTime = TIME - this.elapsedTime;
         long seconds = remainingTime / 1000;
         int minutes = (int) (Math.floor(seconds / 60));
         seconds %= 60;
