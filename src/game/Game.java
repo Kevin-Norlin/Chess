@@ -9,6 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import static constants.Constants.*;
 
+// TODO: generate legalMoves...
 public class Game {
     private GameWindow window;
     private GamePanel panel;
@@ -41,95 +42,74 @@ public class Game {
         this.window = new GameWindow(panel);
         fillBoard();
         this.panel.displayPlayer(this.currentPlayer);
-
-
-
-
     }
 
     public void startGame() {
         pToRemove = null;
+        ArrayList<Point> legalMoves;
 
         // Game loop
         while (true) {
             currentPlayer.startTimer();
             panel.repaint();
             checkTiles();
-
+            int count = 1;
             // Move pieces to new pos if its a valid move
             for (Piece p : pieces) {
+
+                if (p.getIsActive()) {
+                    panel.clearValidMoves();
+                    legalMoves = p.generateLegalMoves(this);
+                    if (legalMoves.size() > 0) {
+                        panel.setValidMoves(legalMoves);
+                        panel.repaint();
+                    }
+                    p.setIsActive(false);
+
+                }
+
+
+
+
+
+
+
+
+
+
+                // If a player tries to move when its not their turn
                 if (p.hasMoved() && !p.getPlayer().equals(this.currentPlayer)) {
                     p.revert();
                     break;
                 }
-                if (p.hasMoved() && p.collisionInPath(pieces)){
-                    System.out.println("Collision!");
-                    p.revert();
-                    break;
-                }
-                // Special cases for the pawn
-                if (pawnCheck(p)) {
-                    break;
-                }
-                // All other Pieces
-                if (p.hasMoved() && p.isValidMove()) { // Check all pieces if they have made a valid move
-                    // Check if any Pieces have been knocked out
-                    for (Piece p2 : pieces) {
-                        if (p.equals(p2)) {
-                            continue;
-                        }
-                        if (p.getPos().equals(p2.getPos()) && !p.getPlayer().equals(p2.getPlayer())) { // Check if there is a piece in the position of p
-                            System.out.println("Valid move! " + p2.getName() + " is out!");
-                            pToRemove = p2;
-                        }
-                    }
-                    p.update();
-                    toggleEvent();
-                }
-                if (p.hasMoved() && !p.isValidMove()) {
-                    System.out.println("Reverted at bottom");
-                    p.revert();
-                }
+                // Check all logic for all pieces
+                if (p.hasMoved()) {
 
+                    if (p.checkLogic(this)) {
 
-            }
-            // Remove the piece that has been marked for removal
-            if (pToRemove != null) {
-                pieces.remove(pToRemove);
-                panel.removePositionable(pToRemove);
-                pToRemove = null;
-            }
-
-            // Check if any Pawns should be promoted
-            for (Piece p : pieces) {
-                if (p instanceof Pawn && ((Pawn) p).getPromoteTo() != null) {
-                    String name = ((Pawn) p).getPromoteTo();
-                    if (name.equals("Queen")) {
-                        p = new Queen(p.getPos(),p.getPlayer());
-                    }
-                    else if (name.equals("Rook")) {
-                        p = new Rook(p.getPos(),p.getPlayer());
-                    }
-                    else if (name.equals("Bishop")) {
-                        p = new Bishop(p.getPos(),p.getPlayer());
-                    }
-                    else if (name.equals("Knight")) {
-                        p = new Knight(p.getPos(),p.getPlayer());
+                        p.update(this);
+                    } else {
+                        p.revert();
                     }
                 }
             }
+            // Remove the piece that has been marked for removal
+            purge();
+
+            // If a move has been made successfully then change player
             if (this.event) {
                 currentPlayer.stopTimer();
                 this.currentPlayer = this.currentPlayer.getNum() == 1 ? this.p2 : this.p1;
                 this.panel.displayPlayer(this.currentPlayer);
                 toggleEvent();
+                panel.clearValidMoves();
             }
 
 
         }
     }
 
-
+    // Check all tiles and tie Pieces to tiles
     public void checkTiles() {
         boolean pieceFound;
         // Check all tiles. Set pieces to the tiles they are over and clear the ones that have no piece.
@@ -146,7 +126,8 @@ public class Game {
             }
         }
     }
-    private Piece pieceInSamePos(Piece p) {
+    // Returns true for both friendly and hostile pieces
+    public Piece pieceInSamePos(Piece p) {
         for (Piece piece : pieces) {
             if (p.getPos().x == piece.getPos().x && p.getPos().y == piece.getPos().y && !p.equals(piece)) {
                 return piece;
@@ -155,43 +136,6 @@ public class Game {
         return null;
     }
 
-    private boolean pawnCheck(Piece p) {
-        // Special cases for pawn
-        if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) == null) {
-            p.update();
-            toggleEvent();
-            return true;
-        }
-        // Pawn tries to move diagonally but there's nothing to capture
-        if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && pieceInSamePos(p) == null) {
-            p.revert();
-            return true;
-        }
-        // Diagonally capture with pawn
-        if (p.hasMoved() && p instanceof Pawn && ((Pawn) p).isCaptureMove() && !pieceInSamePos(p).getPlayer().equals(p.getPlayer())) {
-            this.pToRemove = pieceInSamePos(p);
-            ((Pawn) p).setFirstMove();
-            p.update();
-            toggleEvent();
-            return true;
-        }
-
-        // If the Pawn tries to capture vertically
-        if (p.hasMoved() && p instanceof Pawn && p.isValidMove() && pieceInSamePos(p) != null) {
-            p.revert();
-            toggleEvent();
-            return true;
-        }
-        return false;
-    }
-
-    public Piece enPassantCheck(Piece p) {
-        for (Piece p2: pieces) {
-            if (p2 instanceof Pawn && (Math.abs(p.getPos().y - p2.getPos().y) == 1 && Math.abs(p.getPos().x - p2.getPos().x) == 1 && ((Pawn)p2).getPassant())) {
-                return p2;
-            }
-        }return null;
-    }
 
     public void fillBoard() {
         // Create pieces for Player 1 (p1) and add them to the panel and pieces array
@@ -274,6 +218,19 @@ public class Game {
     }
     public void toggleEvent() {
         this.event = !this.event;
+    }
+    public void setpToRemove(Piece pToRemove) {
+        this.pToRemove = pToRemove;
+    }
+    public ArrayList<Piece> getPieces() {
+        return this.pieces;
+    }
+    private void purge() {
+        if (pToRemove != null) {
+            pieces.remove(pToRemove);
+            panel.removePositionable(pToRemove);
+            pToRemove = null;
+        }
     }
 
 }

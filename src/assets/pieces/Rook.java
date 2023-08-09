@@ -16,11 +16,14 @@ public class Rook extends Piece {
     }
     // Vert / horizontal as many tiles as possible
     public boolean isValidMove() {
-        if (this.getPos().x == this.getPrevPos().x || this.getPos().y == this.getPrevPos().y) {
+        int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
+        int yDiff = Math.abs(this.getPos().y - this.getPrevPos().y);
+        if ((this.getPos().x == this.getPrevPos().x && yDiff != 0) || (this.getPos().y == this.getPrevPos().y && xDiff != 0)) {
             return true;
         }
         return false;
     }
+
 
     @Override
     public boolean collisionInPath(ArrayList<Piece> pieces) {
@@ -33,7 +36,7 @@ public class Rook extends Piece {
 
         for (Piece piece : pieces) {
             // Skip the current piece in the loop
-            if (piece.equals(this)) {
+            if (piece.equals(this) || piece.getPos().equals(this.getPos()) || piece.getPos().equals(this.getPrevPos())) {
                 continue;
             }
 

@@ -1,6 +1,7 @@
 package assets;
 
 import constants.Constants;
+import game.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,13 +17,13 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     note that the logic uses x and y values
     on the panel and not the position on the chessboard.
      */
-
     private Point initialClick;
-
+    private boolean isActive;
     private boolean hasMoved;
     public Movable(Point pos, String imgPath) {
         super(pos.x * Constants.SIZE + 25, pos.y * Constants.SIZE + 25, Constants.PIECE_SIZE, Constants.PIECE_SIZE, pos, imgPath);
         this.hasMoved = false;
+        this.isActive = false;
         addMouseListener(this); // Register the mouse listener
         addMouseMotionListener(this);
     }
@@ -34,6 +35,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println("Mouse pressed");
+        isActive = true;
         initialClick = e.getPoint(); // Store the initial click position
     }
 
@@ -41,6 +43,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     @Override
     // Handles snapping
     public void mouseReleased(MouseEvent e) {
+        isActive = false;
         int xTile = 125;
         int yTile = 125;
         int minDiff = 1000;
@@ -67,6 +70,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         if (this.getPos() != this.getPrevPos()) {
             this.hasMoved = true;
         }
+
 
     }
     @Override
@@ -102,9 +106,11 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.hasMoved = false;
         this.setLocation((this.getPrevPos().x * Constants.SIZE) + 25, (this.getPrevPos().y * Constants.SIZE) + 25); // This is for the listener-events!
     }
-    public void update(){
+    public void update(Game g){
         this.hasMoved = false;
         setPrevPos(this.getPos());
+        g.toggleEvent();
+
 
     }
     public boolean hasMoved() {
@@ -112,6 +118,15 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     }
     public void clearHasMoved() {
         this.hasMoved = false;
+    }
+    public ArrayList<Point> generateLegalMoves(Game g) {
+        return new ArrayList<>();
+    }
+    public boolean getIsActive() {
+        return this.isActive;
+    }
+    public void setIsActive(boolean bol) {
+        this.isActive = bol;
     }
 
 

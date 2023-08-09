@@ -21,11 +21,12 @@ public class Bishop extends Piece {
     public boolean isValidMove() {
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
         int yDiff = Math.abs(this.getPos().y - this.getPrevPos().y);
-        if (xDiff == yDiff) {
+        if (xDiff == yDiff && xDiff != 0) {
             return true;
         }
         return false;
     }
+
     @Override
     public boolean collisionInPath(ArrayList<Piece> pieces) {
         int startX = this.getPrevPos().x;
@@ -37,7 +38,7 @@ public class Bishop extends Piece {
 
         for (Piece piece : pieces) {
             // Skip the current piece in the loop
-            if (piece.equals(this)) {
+            if (piece.equals(this) || piece.getPos().equals(this.getPos()) || piece.getPos().equals(this.getPrevPos())) {
                 continue;
             }
 

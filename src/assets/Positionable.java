@@ -1,6 +1,7 @@
 package assets;
 
 import constants.Constants;
+import game.Game;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,6 +16,8 @@ public abstract class Positionable extends JComponent {
     private int x, y, width, height;
     private Point pos, prevPos;
     private Image image;
+    private String imgPath;
+
 
     // X,Y position is position on the PANEL
     // POINT position is position on the CHESSBOARD (size 8x8)
@@ -27,6 +30,7 @@ public abstract class Positionable extends JComponent {
         this.height = height;
         this.pos = pos;
         this.prevPos = new Point(pos);
+        this.imgPath = imgPath;
         setOpaque(false); // Allow mouse events to be detected
         setBounds(x, y, width, height); // Set the bounds of the component
         //setBorder(BorderFactory.createTitledBorder(this.getClass().getName().substring(this.getClass().getName().lastIndexOf('.') + 1))); // Show the actual border
@@ -83,7 +87,10 @@ public abstract class Positionable extends JComponent {
         this.prevPos = new Point(p);
     }
     public abstract void revert();
-    public abstract void update();
+    public abstract void update(Game g);
+    public String getImgPath() {
+        return this.imgPath;
+    }
 
 
 }

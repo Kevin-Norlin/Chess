@@ -1,6 +1,7 @@
 package assets.pieces;
 
 import assets.Piece;
+import game.Game;
 import game.Player;
 
 import java.awt.*;
@@ -18,62 +19,75 @@ public class Pawn extends Piece {
         this.passant = false;
     }
 
-
-
     public String getName() {
         return "Pawn";
     }
+
     public boolean isValidMove() {
-        int xDiff = this.getPos().x - this.getPrevPos().x;
-        int yDiff = this.getPos().y - this.getPrevPos().y;
-        // The top player (p1) gets to move 2 tiles down the first time moving and then 1 tile.
+        int diffX = Math.abs(this.getPrevPos().x - this.getPos().x);
+        int diffY = this.getPos().y - this.getPrevPos().y;
         if (this.getPlayer().getNum() == 1) {
-            if (this.firstMove && yDiff == 2 && xDiff == 0) {
+            // First move for player 1
+            if (diffX == 0 && diffY == 2 && this.firstMove) {
                 this.firstMove = false;
-                this.passant = true;
-                System.out.println("Valid 2 move!");
                 return true;
-            }
-
-            if (yDiff == 1 && xDiff == 0) {
+            } // Ordinary first move for player 1
+            if (diffX == 0 && diffY == 1 && this.firstMove) {
                 this.firstMove = false;
-                this.passant = false;
-                System.out.println("Valid!");
+                return true;
+            } // Ordinary move for player 1
+            if (diffX == 0 && diffY == 1) {
                 return true;
             }
-            if (yDiff == 0 && xDiff == 0) {
-                return true;
-            }
-        }
-        // The bottom player (p2) gets to move 2 tiles up the first time moving and then 1 tile.
-        else  {
-            if (this.firstMove && yDiff == -2 && xDiff == 0) {
+            return false; // If the move is not correct
+        } if (this.getPlayer().getNum() == 2) {
+            // First move for player 2
+            if (diffX == 0 && diffY == -2 && this.firstMove) {
                 this.firstMove = false;
-                this.passant = true;
-                System.out.println("Valid 2 move!");
                 return true;
-            }
-
-            if (yDiff == -1 && xDiff == 0) {
+            } // Ordinary first move for player 2
+            if (diffX == 0 && diffY == -1 && this.firstMove) {
                 this.firstMove = false;
-                this.passant = false;
-                System.out.println("Valid!");
+                return true;
+            } // Ordinary move for player 2
+            if (diffX == 0 && diffY == -1) {
                 return true;
             }
-            if (yDiff == 0 && xDiff == 0) {
-                return true;
-            }
-
-        }
-
-
-            return false;
-
-
+            return false; // If the move is not correct
+        } return false;
     }
+    public boolean isValidMoveNoEffects() {
+        int diffX = Math.abs(this.getPrevPos().x - this.getPos().x);
+        int diffY = this.getPos().y - this.getPrevPos().y;
+        if (this.getPlayer().getNum() == 1) {
+            // First move for player 1
+            if (diffX == 0 && diffY == 2 && this.firstMove) {
+                return true;
+            } // Ordinary first move for player 1
+            if (diffX == 0 && diffY == 1 && this.firstMove) {
+                return true;
+            } // Ordinary move for player 1
+            if (diffX == 0 && diffY == 1) {
+                return true;
+            }
+            return false; // If the move is not correct
+        } if (this.getPlayer().getNum() == 2) {
+            // First move for player 2
+            if (diffX == 0 && diffY == -2 && this.firstMove) {
+                return true;
+            } // Ordinary first move for player 2
+            if (diffX == 0 && diffY == -1 && this.firstMove) {
+                return true;
+            } // Ordinary move for player 2
+            if (diffX == 0 && diffY == -1) {
+                return true;
+            }
+            return false; // If the move is not correct
+        } return false;
+    }
+
     // Returns true if the Pawn is moved diagonally
     public boolean isCaptureMove() {
-
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
         int yDiff = this.getPos().y - this.getPrevPos().y;
         if (this.getPlayer().getNum() == 1 && xDiff == 1 && yDiff == 1) {
@@ -87,29 +101,20 @@ public class Pawn extends Piece {
         return false;
     }
 
+    // Collision in path should check for collision from start to end position, it doesnt check collision on same pos
     @Override
     public boolean collisionInPath(ArrayList<Piece> pieces) {
-        int startX = this.getPrevPos().x;
-        int startY = this.getPrevPos().y;
-        int endX = this.getPos().x;
-        int endY = this.getPos().y;
-        int diffX = Math.abs(startX - endX);
-        int diffY = Math.abs(startY - endY);
-
-        for (Piece piece: pieces) {
-            if (piece.equals(this)) {
+        for (Piece piece : pieces) {
+            if (piece.getPos().equals(this.getPos()) || piece.getPos().equals(this.getPrevPos())) {
                 continue;
             }
-            int pieceX = piece.getPos().x;
-            int pieceY = piece.getPos().y;
-            if (this.getPlayer().getNum() == 1 && diffX == 0 && diffY == 2) {
-                // If the piece is between the old and the new Y pos on the first "2 move"
-                if (pieceX == startX && pieceY == endY - 1) {
+            if (this.getPlayer().getNum() == 1) {
+                if (piece.getPos().x == this.getPos().x && piece.getPos().y >= this.getPrevPos().y && piece.getPos().y <= this.getPos().y) {
                     return true;
                 }
-            } if (this.getPlayer().getNum() == 2 && diffX == 0 && diffY == 2) {
-                // If the piece is between the old and the new Y pos on the first "2 move"
-                if (pieceX == endX && pieceY == endY + 1) {
+            }
+            if (this.getPlayer().getNum() == 2) {
+                if (piece.getPos().x == this.getPos().x && piece.getPos().y <= this.getPrevPos().y && piece.getPos().y >= this.getPos().y) {
                     return true;
                 }
             }
@@ -126,6 +131,38 @@ public class Pawn extends Piece {
     }
     public void setFirstMove() {
         this.firstMove = false;
+    }
+    public boolean getFirstMove() {
+        return this.firstMove;
+    }
+
+    // Checks all logic for the pawn
+    @Override
+    public boolean checkLogic(Game g) {
+        // Capture Move
+        if (g.pieceInSamePos(this) != null && isCaptureMove() && !(g.pieceInSamePos(this).getPlayer().equals(this.getPlayer()))) {
+            g.setpToRemove(g.pieceInSamePos(this));
+            setFirstMove();
+            return true;
+        }
+        if ((isValidMove() && !collisionInPath(g.getPieces()) && g.pieceInSamePos(this) == null)) {
+            setFirstMove();
+            return true;
+        } return false;
+    }
+    @Override
+    public boolean checkLogicNoEffects(Game g) {
+        // Check if there's a piece in the destination position that can be captured
+        if (g.pieceInSamePos(this) != null && isCaptureMove() && !(g.pieceInSamePos(this).getPlayer().equals(this.getPlayer()))) {
+            return true;
+        }
+        // Check if the move is valid and there are no pieces blocking the path
+        if (isValidMoveNoEffects() && g.pieceInSamePos(this) == null && !collisionInPath(g.getPieces())) {
+            return true;
+        }
+
+        // If neither of the above conditions are met, the move is not valid
+        return false;
     }
 
 }

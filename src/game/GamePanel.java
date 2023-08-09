@@ -2,6 +2,8 @@ package game;
 
 import assets.Movable;
 import assets.Tile;
+import constants.Constants;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,12 +11,14 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel {
     private final ArrayList<Movable> movables;
     private final ArrayList<Tile> chessBoard;
+    private final ArrayList<Point> validMoves;
     private Player p1,p2;
     private Player activePlayer;
 
     public GamePanel(ArrayList<Tile> chessBoard, Player p1, Player p2) {
         // All pieces in the game
         movables = new ArrayList<>();
+        validMoves = new ArrayList<>();
         this.chessBoard = chessBoard;
         this.p1 = p1;
         this.p2 = p2;
@@ -62,8 +66,21 @@ public class GamePanel extends JPanel {
         for (Movable m : movables) {
             m.paintComponent(g);
         }
+        if (validMoves.size() > 0) {
+            for (Point p : validMoves) {
+                g.setColor(Color.GREEN);
+                g.fillRect((p.x * Constants.SIZE) + 25, (p.y * Constants.SIZE) + 25, 5, 5);
+            }
+        }
     }
     public void displayPlayer(Player player) {
         this.activePlayer = player;
+    }
+    public void setValidMoves(ArrayList<Point> moves) {
+        this.validMoves.clear();
+        this.validMoves.addAll(moves);
+    }
+    public void clearValidMoves() {
+        this.validMoves.clear();
     }
 }
