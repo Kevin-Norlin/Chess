@@ -11,9 +11,7 @@ public class Knight extends Piece {
     public Knight(Point p, Player player) {
         super(p, player, player.getNum() == 1 ? "/image/b_knight.png" : "/image/w_knight.png");
     }
-    public String getName() {
-        return "Knight";
-    }
+
     // Moves in L-shape (2 forward, 1 to the side)
     public boolean isValidMove() {
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
@@ -24,5 +22,7 @@ public class Knight extends Piece {
         return false;
     }
 
-
+    public String getName() {
+        return "Knight";
+    }
 }

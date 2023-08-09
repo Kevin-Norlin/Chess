@@ -12,16 +12,12 @@ public class Pawn extends Piece {
     private boolean firstMove; // The pawn piece gets to move two tiles on the first move
     private boolean passant; // En passant rule, this should be true if the piece has moved 2 tiles.
     private String promoteTo;
-
     public Pawn(Point p, Player player) {
         super(p, player, player.getNum() == 1 ? "/image/b_pawn.png" : "/image/w_pawn.png");
         this.firstMove = true;
         this.passant = false;
     }
 
-    public String getName() {
-        return "Pawn";
-    }
 
     public boolean isValidMove() {
         int diffX = Math.abs(this.getPrevPos().x - this.getPos().x);
@@ -56,6 +52,7 @@ public class Pawn extends Piece {
             return false; // If the move is not correct
         } return false;
     }
+
     public boolean isValidMoveNoEffects() {
         int diffX = Math.abs(this.getPrevPos().x - this.getPos().x);
         int diffY = this.getPos().y - this.getPrevPos().y;
@@ -86,7 +83,7 @@ public class Pawn extends Piece {
         } return false;
     }
 
-    // Returns true if the Pawn is moved diagonally
+    // Returns true if the Pawn has moved diagonally
     public boolean isCaptureMove() {
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
         int yDiff = this.getPos().y - this.getPrevPos().y;
@@ -121,21 +118,6 @@ public class Pawn extends Piece {
         } return false;
     }
 
-
-
-    public String getPromoteTo() {
-        return this.promoteTo;
-    }
-    public boolean getPassant() {
-        return this.passant;
-    }
-    public void setFirstMove() {
-        this.firstMove = false;
-    }
-    public boolean getFirstMove() {
-        return this.firstMove;
-    }
-
     // Checks all logic for the pawn
     @Override
     public boolean checkLogic(Game g) {
@@ -150,6 +132,7 @@ public class Pawn extends Piece {
             return true;
         } return false;
     }
+
     @Override
     public boolean checkLogicNoEffects(Game g) {
         // Check if there's a piece in the destination position that can be captured
@@ -160,9 +143,27 @@ public class Pawn extends Piece {
         if (isValidMoveNoEffects() && g.pieceInSamePos(this) == null && !collisionInPath(g.getPieces())) {
             return true;
         }
-
         // If neither of the above conditions are met, the move is not valid
         return false;
     }
 
+    public String getName() {
+        return "Pawn";
+    }
+
+    public String getPromoteTo() {
+        return this.promoteTo;
+    }
+
+    public boolean getPassant() {
+        return this.passant;
+    }
+
+    public void setFirstMove() {
+        this.firstMove = false;
+    }
+
+    public boolean getFirstMove() {
+        return this.firstMove;
+    }
 }

@@ -11,9 +11,7 @@ public class King extends Piece {
     public King(Point p, Player player) {
         super(p, player, player.getNum() == 1 ? "/image/b_king.png" : "/image/w_king.png");
     }
-    public String getName() {
-        return "King";
-    }
+
     // The king moves all directions 1 tile
     public boolean isValidMove() {
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
@@ -24,7 +22,7 @@ public class King extends Piece {
         return false;
     }
 
-
-
-
+    public String getName() {
+        return "King";
+    }
 }
