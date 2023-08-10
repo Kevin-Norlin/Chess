@@ -15,11 +15,13 @@ public class Game {
     private GamePanel panel;
     private ArrayList<Tile> chessBoard;
     private ArrayList<Piece> pieces;
-    private Player p1,p2, currentPlayer;;
+    private Player p1,p2, currentPlayer;
 
     private Piece pToRemove;
     private boolean event; // If a move has been made.
     private boolean checkEvent;
+    private boolean gameOver;
+    private boolean restart;
 
     public Game() {
         p1 = new Player(1);
@@ -28,6 +30,8 @@ public class Game {
         chessBoard = new ArrayList<>();
         pieces = new ArrayList<>();
         this.checkEvent = false;
+        this.gameOver = false;
+        this.restart = false;
         int size = SIZE;
 
         // Fill the list with all tiles in the chessBoard
@@ -40,13 +44,14 @@ public class Game {
                 }
             }
         }
-        this.panel = new GamePanel(chessBoard, p1,p2);
+        this.panel = new GamePanel(this,chessBoard, p1,p2);
         this.window = new GameWindow(panel);
         fillBoard();
         this.panel.displayPlayer(this.currentPlayer);
     }
 
     public void startGame() {
+        panel.setCheckMate(currentPlayer);
         pToRemove = null;
         ArrayList<Point> legalMoves;
 
@@ -100,15 +105,26 @@ public class Game {
                 if (check) {
                     panel.setCheck();
                     panel.repaint();
+                    if (checkForCheckmate(currentPlayer)) {
+                        System.out.println(currentPlayer.getNum() == 1 ? "Checkmate! Black lost!" : "Checkmate! White lost!");
+                        panel.setCheckMate(currentPlayer);
+                        panel.repaint();
+                        this.gameOver = true;
+                    }
 
                 } if (!check) {
                     panel.clearCheck();
                     panel.repaint();
                 }
             }
-
-
+            if (this.gameOver) {
+                while (!this.restart);
+                if (this.restart) {
+                    break;
+                }
+            }
         }
+
     }
 
     // Check all tiles and tie Pieces to tiles
@@ -237,18 +253,48 @@ public class Game {
         }
     }
     public boolean checkForCheck(Player player) {
-        System.out.println("Checking check!");
         Player enemy = player.getNum() == 1 ? this.p2 : this.p1;
         for (Piece p : enemy.getPieces()) {
             for (Point point : p.generateLegalMoves(this)) {
                 // If the enemy player has any legal moves that puts the players king in check
                 if (player.getKing().getPos().equals(point)) {
-                    System.out.println("Done checking check TRUE!");
                     return true;
                 }
             }
-        } System.out.println("Done checking check FALSE!");
+        }
         return false;
+    }
+    // Very taxing method...
+    public boolean checkForCheckmate(Player player) {
+        Piece king = player.getKing();
+        Point originalKingPos = king.getPos();
+        ArrayList<Point> kingValidMoves = king.generateLegalMoves(this);
+        // Check if the king can move out of check
+        for (Point p : kingValidMoves) {
+            king.setPos(p);
+            king.update(); // Without toggling event
+            if (!checkForCheck(player)) {
+                king.setPos(originalKingPos);
+                king.update(); // Without toggling event
+                return false; // The king can move out of check
+            } king.setPos(originalKingPos);
+            king.update(); // Without toggling event
+        }
+        // Check if any of the pieces can prevent the check by moving
+        for (Piece p: player.getPieces()) {
+            ArrayList<Point> moves = p.generateLegalMoves(this);
+            for (Point point : moves) {
+                Point originalPos = p.getPos();
+                p.setPos(point);
+                p.update();
+                if (!checkForCheck(player)) {
+                    p.setPos(originalPos);
+                    p.update();
+                    return false;
+                }p.setPos(originalPos);
+                p.update();
+            }
+        } return true;
     }
 
     public void toggleEvent() {
@@ -269,6 +315,12 @@ public class Game {
     }
     public void setPieces(ArrayList<Piece> pieces) {
         this.pieces = pieces;
+    }
+    public boolean getRestart(){
+        return this.restart;
+    }
+    public void setRestart() {
+        this.restart = true;
     }
 
 }
