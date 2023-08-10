@@ -19,7 +19,6 @@ public class Game {
 
     private Piece pToRemove;
     private boolean event; // If a move has been made.
-    private boolean checkEvent;
     private boolean gameOver;
     private boolean restart;
 
@@ -34,9 +33,10 @@ public class Game {
         // Game loop
         while (true) {
             currentPlayer.startTimer();
+
             panel.repaint();
             checkTiles();
-            int count = 1;
+
             // Move pieces to new pos if its a valid move
             for (Piece p : pieces) {
 
@@ -58,9 +58,7 @@ public class Game {
                 }
                 // Check all logic for all pieces
                 if (p.hasMoved()) {
-
                     if (p.checkLogic(this)) {
-
                         p.update(this);
                     } else {
                         p.revert();
@@ -71,38 +69,41 @@ public class Game {
             purge();
 
             // If a move has been made successfully then change player
-            if (this.event) {
-                currentPlayer.stopTimer();
-                this.currentPlayer = this.currentPlayer.getNum() == 1 ? this.p2 : this.p1;
-                this.panel.displayPlayer(this.currentPlayer);
+            if (event) {
                 toggleEvent();
+                currentPlayer.stopTimer();
+                this.currentPlayer = currentPlayer.getNum() == 1 ? p2 : p1;
+                this.panel.displayPlayer(currentPlayer);
                 panel.clearValidMoves();
                 boolean check = checkForCheck(currentPlayer);
+                // If any players King is in check
                 if (check) {
                     panel.setCheck();
                     panel.repaint();
+                    // If any players King is in checkmate, gameover
                     if (checkForCheckmate(currentPlayer)) {
-                        System.out.println(currentPlayer.getNum() == 1 ? "Checkmate! Black lost!" : "Checkmate! White lost!");
                         panel.setCheckMate(currentPlayer);
                         panel.repaint();
                         this.gameOver = true;
                     }
-
                 } if (!check) {
                     panel.clearCheck();
                     panel.repaint();
                 }
             }
-            if (this.gameOver) {
-
-                while (!this.restart) {
+            if (currentPlayer.getRemainingTime() < 1000) {
+                panel.setCheckMate(currentPlayer); // Lost to time
+                this.gameOver = true;
+            }
+            // Game over, wait for restart
+            if (gameOver) {
+                while (!restart) {
                     panel.repaint();
                 }
                 panel.clearCheckMate();
                 restartGame();
             }
         }
-
     }
 
     // Check all tiles and tie Pieces to tiles
@@ -231,6 +232,9 @@ public class Game {
         }
     }
     public boolean checkForCheck(Player player) {
+        if (player.hasKing() == false) {
+            return true;
+        }
         Player enemy = player.getNum() == 1 ? this.p2 : this.p1;
         for (Piece p : enemy.getPieces()) {
             for (Point point : p.generateLegalMoves(this)) {
@@ -244,6 +248,9 @@ public class Game {
     }
     // Very taxing method...
     public boolean checkForCheckmate(Player player) {
+        if (player.hasKing() == false) {
+            return true;
+        }
         Piece king = player.getKing();
         Point originalKingPos = king.getPos();
         ArrayList<Point> kingValidMoves = king.generateLegalMoves(this);
@@ -287,6 +294,11 @@ public class Game {
     private void purge() {
         if (pToRemove != null) {
             pieces.remove(pToRemove);
+            if (currentPlayer.getNum() == 1) {
+                p2.removePiece(pToRemove);
+            } else {
+                p1.removePiece(pToRemove);
+            }
             panel.removePositionable(pToRemove);
             pToRemove = null;
         }
@@ -307,7 +319,6 @@ public class Game {
         currentPlayer = p1;
         chessBoard = new ArrayList<>();
         pieces = new ArrayList<>();
-        this.checkEvent = false;
         this.gameOver = false;
         this.restart = false;
         int size = SIZE;
@@ -334,7 +345,6 @@ public class Game {
         currentPlayer = p1;
         chessBoard = new ArrayList<>();
         pieces = new ArrayList<>();
-        this.checkEvent = false;
         this.gameOver = false;
         this.restart = false;
         int size = SIZE;

@@ -43,6 +43,8 @@ public class GamePanel extends JPanel {
         this.restartButton = restart;
         Font font = new Font("Planc", Font.BOLD,40);
         title.setFont(font);
+        title.setForeground(Color.BLACK);
+
         add(title);
     }
 
@@ -84,7 +86,9 @@ public class GamePanel extends JPanel {
         }
         else {
 
-            // Draw players
+
+
+            g.setColor(Color.BLACK);
             Font boldFont = new Font("Planc", Font.BOLD, 20);
             g.setFont(boldFont);
             g.drawString("Black  " + p1.getRemainingTimeAsString(), 50, 50);
@@ -95,6 +99,7 @@ public class GamePanel extends JPanel {
             // Draw piece names
             Font smallFont = new Font("Planc", Font.CENTER_BASELINE, 12);
             g.setFont(smallFont);
+
             // Draw chessBoard
             for (Tile t : chessBoard) {
                 t.paintComponent(g);
@@ -106,8 +111,14 @@ public class GamePanel extends JPanel {
             }
             if (validMoves.size() > 0) {
                 for (Point p : validMoves) {
-                    g.setColor(Color.GREEN);
-                    g.fillRect((p.x * Constants.SIZE) + 25, (p.y * Constants.SIZE) + 25, 5, 5);
+                    g.setColor(Color.ORANGE);
+                    int circleSize = 20; // Adjust the size of the circle as needed
+
+                    g.fillRoundRect((p.x * Constants.SIZE) + (Constants.SIZE / 2 - circleSize / 2),
+                            (p.y * Constants.SIZE) + (Constants.SIZE / 2 - circleSize / 2),
+                            circleSize, circleSize,
+                            circleSize, circleSize);
+
                 }
             }
             if (check) {

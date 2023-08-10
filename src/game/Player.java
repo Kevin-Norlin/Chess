@@ -91,4 +91,12 @@ public class Player {
             }
         } return null;
     }
+    public boolean hasKing(){
+        boolean kingfound = false;
+        for (Piece p : pieces) {
+            if (p instanceof King) {
+                kingfound = true;
+            }
+        } return kingfound;
+    }
 }
