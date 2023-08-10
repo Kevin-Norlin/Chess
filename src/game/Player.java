@@ -1,6 +1,7 @@
 package game;
 
 import assets.Piece;
+import assets.pieces.King;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Player {
 
     public Player(int num) {
         this.num = num;
+        this.pieces = new ArrayList<>();
     }
 
     public int getNum() {
@@ -69,5 +71,24 @@ public class Player {
         seconds %= 60;
         String retStr = String.valueOf(minutes) + " : " + String.valueOf(seconds);
         return retStr;
+    }
+    public void setPieces(ArrayList<Piece> pieces){
+        this.pieces = pieces;
+    }
+    public ArrayList<Piece> getPieces(){
+        return this.pieces;
+    }
+    public void addPiece(Piece piece){
+        this.pieces.add(piece);
+    }
+    public void removePiece(Piece piece){
+        this.pieces.remove(piece);
+    }
+    public Piece getKing() {
+        for (Piece p: pieces) {
+            if (p instanceof King) {
+                return p;
+            }
+        } return null;
     }
 }

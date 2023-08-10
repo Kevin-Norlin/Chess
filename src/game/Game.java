@@ -19,6 +19,7 @@ public class Game {
 
     private Piece pToRemove;
     private boolean event; // If a move has been made.
+    private boolean checkEvent;
 
     public Game() {
         p1 = new Player(1);
@@ -26,6 +27,7 @@ public class Game {
         currentPlayer = p1;
         chessBoard = new ArrayList<>();
         pieces = new ArrayList<>();
+        this.checkEvent = false;
         int size = SIZE;
 
         // Fill the list with all tiles in the chessBoard
@@ -57,6 +59,7 @@ public class Game {
             // Move pieces to new pos if its a valid move
             for (Piece p : pieces) {
 
+                // Show valid moves on panel
                 if (p.getIsActive()) {
                     panel.clearValidMoves();
                     legalMoves = p.generateLegalMoves(this);
@@ -65,17 +68,7 @@ public class Game {
                         panel.repaint();
                     }
                     p.setIsActive(false);
-
                 }
-
-
-
-
-
-
-
-
-
 
                 // If a player tries to move when its not their turn
                 if (p.hasMoved() && !p.getPlayer().equals(this.currentPlayer)) {
@@ -103,6 +96,15 @@ public class Game {
                 this.panel.displayPlayer(this.currentPlayer);
                 toggleEvent();
                 panel.clearValidMoves();
+                boolean check = checkForCheck(currentPlayer);
+                if (check) {
+                    panel.setCheck();
+                    panel.repaint();
+
+                } if (!check) {
+                    panel.clearCheck();
+                    panel.repaint();
+                }
             }
 
 
@@ -138,84 +140,117 @@ public class Game {
 
 
     public void fillBoard() {
-        // Create pieces for Player 1 (p1) and add them to the panel and pieces array
+        // Create pieces for Player 1 (p1) and add them to the panel, pieces array, and player's pieces list
         Piece kingP1 = new King(new Point(5, 1), p1);
         panel.addPositionable(kingP1);
         pieces.add(kingP1);
+        p1.addPiece(kingP1);
 
         Piece queenP1 = new Queen(new Point(4, 1), p1);
         panel.addPositionable(queenP1);
         pieces.add(queenP1);
+        p1.addPiece(queenP1);
 
         Piece rook1P1 = new Rook(new Point(1, 1), p1);
         panel.addPositionable(rook1P1);
         pieces.add(rook1P1);
+        p1.addPiece(rook1P1);
 
         Piece rook2P1 = new Rook(new Point(8, 1), p1);
         panel.addPositionable(rook2P1);
         pieces.add(rook2P1);
+        p1.addPiece(rook2P1);
 
         Piece knight1P1 = new Knight(new Point(2, 1), p1);
         panel.addPositionable(knight1P1);
         pieces.add(knight1P1);
+        p1.addPiece(knight1P1);
 
         Piece knight2P1 = new Knight(new Point(7, 1), p1);
         panel.addPositionable(knight2P1);
         pieces.add(knight2P1);
+        p1.addPiece(knight2P1);
 
         Piece bishop1P1 = new Bishop(new Point(3, 1), p1);
         panel.addPositionable(bishop1P1);
         pieces.add(bishop1P1);
+        p1.addPiece(bishop1P1);
 
         Piece bishop2P1 = new Bishop(new Point(6, 1), p1);
         panel.addPositionable(bishop2P1);
         pieces.add(bishop2P1);
+        p1.addPiece(bishop2P1);
 
         for (int col = 1; col <= 8; col++) {
             Piece pawnP1 = new Pawn(new Point(col, 2), p1);
             panel.addPositionable(pawnP1);
             pieces.add(pawnP1);
+            p1.addPiece(pawnP1);
         }
 
-        // Create pieces for Player 2 (p2) and add them to the panel and pieces array
+        // Create pieces for Player 2 (p2) and add them to the panel, pieces array, and player's pieces list
         Piece kingP2 = new King(new Point(5, 8), p2);
         panel.addPositionable(kingP2);
         pieces.add(kingP2);
+        p2.addPiece(kingP2);
 
         Piece queenP2 = new Queen(new Point(4, 8), p2);
         panel.addPositionable(queenP2);
         pieces.add(queenP2);
+        p2.addPiece(queenP2);
 
         Piece rook1P2 = new Rook(new Point(1, 8), p2);
         panel.addPositionable(rook1P2);
         pieces.add(rook1P2);
+        p2.addPiece(rook1P2);
 
         Piece rook2P2 = new Rook(new Point(8, 8), p2);
         panel.addPositionable(rook2P2);
         pieces.add(rook2P2);
+        p2.addPiece(rook2P2);
 
         Piece knight1P2 = new Knight(new Point(2, 8), p2);
         panel.addPositionable(knight1P2);
         pieces.add(knight1P2);
+        p2.addPiece(knight1P2);
 
         Piece knight2P2 = new Knight(new Point(7, 8), p2);
         panel.addPositionable(knight2P2);
         pieces.add(knight2P2);
+        p2.addPiece(knight2P2);
 
         Piece bishop1P2 = new Bishop(new Point(3, 8), p2);
         panel.addPositionable(bishop1P2);
         pieces.add(bishop1P2);
+        p2.addPiece(bishop1P2);
 
         Piece bishop2P2 = new Bishop(new Point(6, 8), p2);
         panel.addPositionable(bishop2P2);
         pieces.add(bishop2P2);
+        p2.addPiece(bishop2P2);
 
         for (int col = 1; col <= 8; col++) {
             Piece pawnP2 = new Pawn(new Point(col, 7), p2);
             panel.addPositionable(pawnP2);
             pieces.add(pawnP2);
+            p2.addPiece(pawnP2);
         }
     }
+    public boolean checkForCheck(Player player) {
+        System.out.println("Checking check!");
+        Player enemy = player.getNum() == 1 ? this.p2 : this.p1;
+        for (Piece p : enemy.getPieces()) {
+            for (Point point : p.generateLegalMoves(this)) {
+                // If the enemy player has any legal moves that puts the players king in check
+                if (player.getKing().getPos().equals(point)) {
+                    System.out.println("Done checking check TRUE!");
+                    return true;
+                }
+            }
+        } System.out.println("Done checking check FALSE!");
+        return false;
+    }
+
     public void toggleEvent() {
         this.event = !this.event;
     }

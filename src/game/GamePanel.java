@@ -14,6 +14,7 @@ public class GamePanel extends JPanel {
     private final ArrayList<Point> validMoves;
     private Player p1,p2;
     private Player activePlayer;
+    private boolean check;
 
     public GamePanel(ArrayList<Tile> chessBoard, Player p1, Player p2) {
         // All pieces in the game
@@ -72,6 +73,11 @@ public class GamePanel extends JPanel {
                 g.fillRect((p.x * Constants.SIZE) + 25, (p.y * Constants.SIZE) + 25, 5, 5);
             }
         }
+        if (check) {
+            g.setColor(Color.GREEN);
+            g.setFont(new Font("Planc",Font.BOLD, 20));
+            g.drawString("Check", 920,500);
+        }
     }
     public void displayPlayer(Player player) {
         this.activePlayer = player;
@@ -82,5 +88,13 @@ public class GamePanel extends JPanel {
     }
     public void clearValidMoves() {
         this.validMoves.clear();
+    }
+    public void setCheck() {
+        this.check = true;
+        this.repaint();
+    }
+    public void clearCheck() {
+        this.check = false;
+        this.repaint();
     }
 }
