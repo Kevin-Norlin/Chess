@@ -6,3 +6,4 @@ This is a simple chess game implemented using Java Swing utilities. The game has
 * Legal move validation: The game ensures that only valid moves are allowed and enforces the rules of chess.
 * Highlight legal moves: When a player selects a piece, the game highlights the legal moves for that piece to assist in gameplay.
 * Simple GUI: The graphical user interface is built using Swing, providing an intuitive and easy-to-use interface.
+* ![Check](resources/readme/check.png)
