@@ -18,6 +18,7 @@ public class GamePanel extends JPanel {
     private Player p1,p2;
     private Player activePlayer;
     private boolean check, checkMate;
+    private JButton restartButton;
 
 
     public GamePanel(Game game, ArrayList<Tile> chessBoard, Player p1, Player p2) {
@@ -33,6 +34,13 @@ public class GamePanel extends JPanel {
 
         // Text above chessboard
         JLabel title = new JLabel("Chess");
+        JButton restart = new JButton("Restart game");
+        restart.addActionListener((e) -> {
+            System.out.println("I am clicked");
+            game.setRestart();
+            repaint();
+        });
+        this.restartButton = restart;
         Font font = new Font("Planc", Font.BOLD,40);
         title.setFont(font);
         add(title);
@@ -67,9 +75,15 @@ public class GamePanel extends JPanel {
             int y = (getHeight() + textHeight) / 2 - textHeight; // Adjust y position
 
             g2d.drawString(text, x, y);
+            int buttonX = (getWidth() - restartButton.getPreferredSize().width) / 2;
+            int buttonY = y + textHeight + 20; // Adjust button position
 
+            restartButton.setBounds(buttonX, buttonY, restartButton.getPreferredSize().width, restartButton.getPreferredSize().height);
+            add(this.restartButton);
+            revalidate();
         }
         else {
+
             // Draw players
             Font boldFont = new Font("Planc", Font.BOLD, 20);
             g.setFont(boldFont);
@@ -101,6 +115,8 @@ public class GamePanel extends JPanel {
                 g.setFont(new Font("Planc", Font.BOLD, 20));
                 g.drawString("Check", 920, 500);
             }
+
+
         }
     }
     public void displayPlayer(Player player) {
@@ -124,6 +140,9 @@ public class GamePanel extends JPanel {
     public void setCheckMate(Player player) {
         this.checkMate = true;
         this.activePlayer = player;
+    }
+    public void clearCheckMate() {
+        this.checkMate = false;
     }
 
 }

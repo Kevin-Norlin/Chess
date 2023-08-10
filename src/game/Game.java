@@ -24,34 +24,10 @@ public class Game {
     private boolean restart;
 
     public Game() {
-        p1 = new Player(1);
-        p2 = new Player(2);
-        currentPlayer = p1;
-        chessBoard = new ArrayList<>();
-        pieces = new ArrayList<>();
-        this.checkEvent = false;
-        this.gameOver = false;
-        this.restart = false;
-        int size = SIZE;
-
-        // Fill the list with all tiles in the chessBoard
-        for (int r = size; r <= size * 8; r += size) {
-            for (int c = size; c <= size * 8; c += size) {
-                if ((r + c) / size % 2 == 0) {
-                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_LIGHT));
-                } else {
-                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_DARK));
-                }
-            }
-        }
-        this.panel = new GamePanel(this,chessBoard, p1,p2);
-        this.window = new GameWindow(panel);
-        fillBoard();
-        this.panel.displayPlayer(this.currentPlayer);
+       initGame();
     }
 
     public void startGame() {
-        panel.setCheckMate(currentPlayer);
         pToRemove = null;
         ArrayList<Point> legalMoves;
 
@@ -118,10 +94,12 @@ public class Game {
                 }
             }
             if (this.gameOver) {
-                while (!this.restart);
-                if (this.restart) {
-                    break;
+
+                while (!this.restart) {
+                    panel.repaint();
                 }
+                panel.clearCheckMate();
+                restartGame();
             }
         }
 
@@ -323,6 +301,61 @@ public class Game {
         this.restart = true;
     }
 
+    public void initGame() {
+        p1 = new Player(1);
+        p2 = new Player(2);
+        currentPlayer = p1;
+        chessBoard = new ArrayList<>();
+        pieces = new ArrayList<>();
+        this.checkEvent = false;
+        this.gameOver = false;
+        this.restart = false;
+        int size = SIZE;
+
+        // Fill the list with all tiles in the chessBoard
+        for (int r = size; r <= size * 8; r += size) {
+            for (int c = size; c <= size * 8; c += size) {
+                if ((r + c) / size % 2 == 0) {
+                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_LIGHT));
+                } else {
+                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_DARK));
+                }
+            }
+        }
+        this.panel = new GamePanel(this,chessBoard, p1,p2);
+        this.window = new GameWindow(panel);
+        fillBoard();
+        this.panel.displayPlayer(this.currentPlayer);
+    }
+    public void restartGame() {
+        System.out.println("Restart");
+        p1 = new Player(1);
+        p2 = new Player(2);
+        currentPlayer = p1;
+        chessBoard = new ArrayList<>();
+        pieces = new ArrayList<>();
+        this.checkEvent = false;
+        this.gameOver = false;
+        this.restart = false;
+        int size = SIZE;
+
+        // Fill the list with all tiles in the chessBoard
+        for (int r = size; r <= size * 8; r += size) {
+            for (int c = size; c <= size * 8; c += size) {
+                if ((r + c) / size % 2 == 0) {
+                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_LIGHT));
+                } else {
+                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_DARK));
+                }
+            }
+        }
+        this.panel = new GamePanel(this,chessBoard, p1,p2);
+        window.getContentPane().removeAll();
+        window.add(this.panel);
+        window.revalidate();
+        fillBoard();
+        this.panel.displayPlayer(this.currentPlayer);
+    }
 }
 
 
