@@ -98,7 +98,7 @@ public class Pawn extends Piece {
         return false;
     }
 
-    // Collision in path should check for collision from start to end position, it doesnt check collision on same pos
+    // Collision in path should check for collision from start to end position, it doesn't check collision on same pos
     @Override
     public boolean collisionInPath(ArrayList<Piece> pieces) {
         for (Piece piece : pieces) {
@@ -135,7 +135,7 @@ public class Pawn extends Piece {
 
     @Override
     public boolean checkLogicNoEffects(Game g) {
-        // Check if there's a piece in the destination position that can be captured
+        // Capture Move
         if (g.pieceInSamePos(this) != null && isCaptureMove() && !(g.pieceInSamePos(this).getPlayer().equals(this.getPlayer()))) {
             return true;
         }

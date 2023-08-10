@@ -110,8 +110,10 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.hasMoved = false;
         setPrevPos(this.getPos());
         g.toggleEvent();
-
-
+    }
+    public void update(){
+        this.hasMoved = false;
+        setPrevPos(this.getPos());
     }
     public boolean hasMoved() {
         return this.hasMoved;

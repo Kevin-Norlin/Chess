@@ -15,10 +15,7 @@ public class Rook extends Piece {
     public boolean isValidMove() {
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
         int yDiff = Math.abs(this.getPos().y - this.getPrevPos().y);
-        if ((this.getPos().x == this.getPrevPos().x && yDiff != 0) || (this.getPos().y == this.getPrevPos().y && xDiff != 0)) {
-            return true;
-        }
-        return false;
+        return (this.getPos().x == this.getPrevPos().x && yDiff != 0) || (this.getPos().y == this.getPrevPos().y && xDiff != 0);
     }
 
     @Override

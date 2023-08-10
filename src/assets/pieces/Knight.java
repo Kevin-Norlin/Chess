@@ -16,10 +16,7 @@ public class Knight extends Piece {
     public boolean isValidMove() {
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
         int yDiff = Math.abs(this.getPos().y - this.getPrevPos().y);
-        if ((yDiff == 2 && xDiff == 1) || (yDiff == 1 && xDiff == 2)) {
-            return true;
-        }
-        return false;
+        return (yDiff == 2 && xDiff == 1) || (yDiff == 1 && xDiff == 2);
     }
 
     public String getName() {

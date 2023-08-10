@@ -18,10 +18,7 @@ public class Bishop extends Piece {
     public boolean isValidMove() {
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
         int yDiff = Math.abs(this.getPos().y - this.getPrevPos().y);
-        if (xDiff == yDiff && xDiff != 0) {
-            return true;
-        }
-        return false;
+        return xDiff == yDiff && xDiff != 0;
     }
 
     @Override

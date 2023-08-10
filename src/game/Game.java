@@ -232,6 +232,9 @@ public class Game {
             pToRemove = null;
         }
     }
+    public void setPieces(ArrayList<Piece> pieces) {
+        this.pieces = pieces;
+    }
 
 }
 
