@@ -2,7 +2,9 @@ package game;
 
 import assets.Piece;
 import assets.pieces.King;
+import assets.pieces.Rook;
 
+import java.awt.*;
 import java.sql.Time;
 import java.util.ArrayList;
 
@@ -98,5 +100,12 @@ public class Player {
                 kingfound = true;
             }
         } return kingfound;
+    }
+    public Rook getRookInPos(Point p) {
+        for (Piece piece : pieces) {
+            if (piece instanceof Rook && piece.getPos().equals(p)) {
+                return (Rook) piece;
+            }
+        } return null;
     }
 }

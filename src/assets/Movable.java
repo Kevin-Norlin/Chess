@@ -29,12 +29,12 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     }
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("Mouse clicked");
+        //System.out.println("Mouse clicked");
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("Mouse pressed");
+        //System.out.println("Mouse pressed");
         isActive = true;
         initialClick = e.getPoint(); // Store the initial click position
     }
@@ -66,7 +66,7 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.setX(xTile);
         this.setY(yTile);
         this.setLocation(xTile,yTile); // This is for the listener-events!
-        System.out.println(this.getPos());
+        //System.out.println(this.getPos());
         if (this.getPos() != this.getPrevPos()) {
             this.hasMoved = true;
         }
@@ -75,12 +75,12 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
     }
     @Override
     public void mouseEntered(MouseEvent e) {
-        System.out.println("Mouse entered");
+        //System.out.println("Mouse entered");
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        System.out.println("Mouse exited");
+        //System.out.println("Mouse exited");
     }
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -107,13 +107,16 @@ public abstract class Movable extends Positionable implements MouseListener, Mou
         this.setLocation((this.getPrevPos().x * Constants.SIZE) + 25, (this.getPrevPos().y * Constants.SIZE) + 25); // This is for the listener-events!
     }
     public void update(Game g){
+        this.setLocation((this.getPos().x * Constants.SIZE) + 25, (this.getPos().y * Constants.SIZE) + 25); // This is for the listener-events!
         this.hasMoved = false;
         setPrevPos(this.getPos());
         g.toggleEvent();
     }
     public void update(){
+        this.setLocation((this.getPos().x * Constants.SIZE) + 25, (this.getPos().y * Constants.SIZE) + 25); // This is for the listener-events!
         this.hasMoved = false;
         setPrevPos(this.getPos());
+
     }
     public boolean hasMoved() {
         return this.hasMoved;

@@ -8,8 +8,10 @@ import java.util.ArrayList;
 
 // "Torn"
 public class Rook extends Piece {
+    private boolean firstMove;
     public Rook(Point p, Player player) {
         super(p, player, player.getNum() == 1 ? "/image/b_rook.png" : "/image/w_rook.png");
+        this.firstMove = true;
     }
 
     public boolean isValidMove() {
@@ -25,6 +27,14 @@ public class Rook extends Piece {
 
     public String getName() {
         return "Rook";
+    }
+
+    public void setFirstMove() {
+        this.firstMove = false;
+    }
+
+    public boolean getFirstMove() {
+        return this.firstMove;
     }
 
 }

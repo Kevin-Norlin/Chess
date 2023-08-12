@@ -26,13 +26,16 @@ public class Pawn extends Piece {
             // First move for player 1
             if (diffX == 0 && diffY == 2 && this.firstMove) {
                 this.firstMove = false;
+                this.passant = true;
                 return true;
             } // Ordinary first move for player 1
             if (diffX == 0 && diffY == 1 && this.firstMove) {
                 this.firstMove = false;
+                this.passant = false;
                 return true;
             } // Ordinary move for player 1
             if (diffX == 0 && diffY == 1) {
+                this.passant = false;
                 return true;
             }
             return false; // If the move is not correct
@@ -40,13 +43,16 @@ public class Pawn extends Piece {
             // First move for player 2
             if (diffX == 0 && diffY == -2 && this.firstMove) {
                 this.firstMove = false;
+                this.passant = true;
                 return true;
             } // Ordinary first move for player 2
             if (diffX == 0 && diffY == -1 && this.firstMove) {
                 this.firstMove = false;
+                this.passant = false;
                 return true;
             } // Ordinary move for player 2
             if (diffX == 0 && diffY == -1) {
+                this.passant = false;
                 return true;
             }
             return false; // If the move is not correct
@@ -88,19 +94,24 @@ public class Pawn extends Piece {
         int xDiff = Math.abs(this.getPos().x - this.getPrevPos().x);
         int yDiff = this.getPos().y - this.getPrevPos().y;
         if (this.getPlayer().getNum() == 1 && xDiff == 1 && yDiff == 1) {
-            System.out.println("CaptureMove1");
+            //System.out.println("CaptureMove1");
             return true;
         }
         if (this.getPlayer().getNum() == 2 && xDiff == 1 && yDiff == -1) {
-            System.out.println("CaptureMove2");
+            //System.out.println("CaptureMove2");
             return true;
         }
         return false;
     }
 
+
     // Collision in path should check for collision from start to end position, it doesn't check collision on same pos
     @Override
     public boolean collisionInPath(ArrayList<Piece> pieces) {
+        // There cant be any collision.
+        if (this.isCaptureMove()) {
+            return false;
+        }
         for (Piece piece : pieces) {
             if (piece.getPos().equals(this.getPos()) || piece.getPos().equals(this.getPrevPos())) {
                 continue;

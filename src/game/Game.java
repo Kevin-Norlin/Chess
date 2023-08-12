@@ -15,15 +15,17 @@ public class Game {
     private GamePanel panel;
     private ArrayList<Tile> chessBoard;
     private ArrayList<Piece> pieces;
-    private Player p1,p2, currentPlayer;
+    private Player p1, p2, currentPlayer;
 
     private Piece pToRemove;
     private boolean event; // If a move has been made.
     private boolean gameOver;
     private boolean restart;
+    private boolean castleEvent;
+
 
     public Game() {
-       initGame();
+        initGame();
     }
 
     public void startGame() {
@@ -56,10 +58,37 @@ public class Game {
                     p.revert();
                     break;
                 }
+                // En Passantlogic
+                if (p.hasMoved() && p instanceof Pawn) {
+                    Piece p2 = isPassantMove((Pawn)p);
+                    if (p2 != null && !p.collisionInPath(pieces)) {
+                        pToRemove = p2;
+                        p.update(this);
+                        this.event = true;
+                        this.castleEvent = true;
+                    }
+                }
+                // Castling logic
+                if (p.hasMoved() && p instanceof King && ((King) p).isCastleMove()) {
+                    Point pos = p.getPos();
+                    Point prevPos = p.getPrevPos();
+                    if ( !p.collisionInPath(pieces)  && !checkInPath((King) p)) {
+                        p.setPos(pos);
+                        p.setPrevPos(prevPos);
+                        ((King) p).castle();
+                        this.event = true;
+                        this.castleEvent = true;
+                        panel.clearValidMoves();
+                        panel.repaint();
+                    }
+                }
+
                 // Check all logic for all pieces
-                if (p.hasMoved()) {
+                if (!castleEvent && p.hasMoved()) {
                     if (p.checkLogic(this)) {
                         p.update(this);
+                        panel.clearValidMoves();
+                        panel.repaint();
                     } else {
                         p.revert();
                     }
@@ -70,14 +99,16 @@ public class Game {
 
             // If a move has been made successfully then change player
             if (event) {
-                toggleEvent();
+                boolean check1 = checkForCheck(currentPlayer);
+                this.castleEvent = false;
+                this.event = false;
                 currentPlayer.stopTimer();
                 this.currentPlayer = currentPlayer.getNum() == 1 ? p2 : p1;
                 this.panel.displayPlayer(currentPlayer);
                 panel.clearValidMoves();
-                boolean check = checkForCheck(currentPlayer);
+                boolean check2 = checkForCheck(currentPlayer);
                 // If any players King is in check
-                if (check) {
+                if (check1 || check2) {
                     panel.setCheck();
                     panel.repaint();
                     // If any players King is in checkmate, gameover
@@ -86,7 +117,8 @@ public class Game {
                         panel.repaint();
                         this.gameOver = true;
                     }
-                } if (!check) {
+                }
+                else {
                     panel.clearCheck();
                     panel.repaint();
                 }
@@ -110,7 +142,7 @@ public class Game {
     public void checkTiles() {
         boolean pieceFound;
         // Check all tiles. Set pieces to the tiles they are over and clear the ones that have no piece.
-        for (Tile t: chessBoard) {
+        for (Tile t : chessBoard) {
             pieceFound = false;
             for (Piece p : pieces) {
                 if (t.checkTile(p)) {
@@ -123,6 +155,7 @@ public class Game {
             }
         }
     }
+
     // Returns true for both friendly and hostile pieces
     public Piece pieceInSamePos(Piece p) {
         for (Piece piece : pieces) {
@@ -231,6 +264,7 @@ public class Game {
             p2.addPiece(pawnP2);
         }
     }
+
     public boolean checkForCheck(Player player) {
         if (player.hasKing() == false) {
             return true;
@@ -246,6 +280,7 @@ public class Game {
         }
         return false;
     }
+
     // Very taxing method...
     public boolean checkForCheckmate(Player player) {
         if (player.hasKing() == false) {
@@ -253,6 +288,7 @@ public class Game {
         }
         Piece king = player.getKing();
         Point originalKingPos = king.getPos();
+        Point originalKingPrevPos = king.getPrevPos();
         ArrayList<Point> kingValidMoves = king.generateLegalMoves(this);
         // Check if the king can move out of check
         for (Point p : kingValidMoves) {
@@ -261,36 +297,47 @@ public class Game {
             if (!checkForCheck(player)) {
                 king.setPos(originalKingPos);
                 king.update(); // Without toggling event
+                king.setPrevPos(originalKingPrevPos);
                 return false; // The king can move out of check
-            } king.setPos(originalKingPos);
+            }
+            king.setPos(originalKingPos);
             king.update(); // Without toggling event
+            king.setPrevPos(originalKingPrevPos);
         }
         // Check if any of the pieces can prevent the check by moving
-        for (Piece p: player.getPieces()) {
+        for (Piece p : player.getPieces()) {
             ArrayList<Point> moves = p.generateLegalMoves(this);
             for (Point point : moves) {
                 Point originalPos = p.getPos();
+                Point originalPrevPos = p.getPrevPos();
                 p.setPos(point);
                 p.update();
                 if (!checkForCheck(player)) {
                     p.setPos(originalPos);
                     p.update();
+                    p.setPrevPos(originalPrevPos);
                     return false;
-                }p.setPos(originalPos);
+                }
+                p.setPos(originalPos);
                 p.update();
+                p.setPrevPos(originalPrevPos);
             }
-        } return true;
+        }
+        return true;
     }
 
     public void toggleEvent() {
         this.event = !this.event;
     }
+
     public void setpToRemove(Piece pToRemove) {
         this.pToRemove = pToRemove;
     }
+
     public ArrayList<Piece> getPieces() {
         return this.pieces;
     }
+
     private void purge() {
         if (pToRemove != null) {
             pieces.remove(pToRemove);
@@ -303,12 +350,15 @@ public class Game {
             pToRemove = null;
         }
     }
+
     public void setPieces(ArrayList<Piece> pieces) {
         this.pieces = pieces;
     }
-    public boolean getRestart(){
+
+    public boolean getRestart() {
         return this.restart;
     }
+
     public void setRestart() {
         this.restart = true;
     }
@@ -327,17 +377,18 @@ public class Game {
         for (int r = size; r <= size * 8; r += size) {
             for (int c = size; c <= size * 8; c += size) {
                 if ((r + c) / size % 2 == 0) {
-                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_LIGHT));
+                    chessBoard.add(new Tile(r, c, size, size, TILE_COLOR_LIGHT));
                 } else {
-                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_DARK));
+                    chessBoard.add(new Tile(r, c, size, size, TILE_COLOR_DARK));
                 }
             }
         }
-        this.panel = new GamePanel(this,chessBoard, p1,p2);
+        this.panel = new GamePanel(this, chessBoard, p1, p2);
         this.window = new GameWindow(panel);
         fillBoard();
         this.panel.displayPlayer(this.currentPlayer);
     }
+
     public void restartGame() {
         System.out.println("Restart");
         p1 = new Player(1);
@@ -353,19 +404,84 @@ public class Game {
         for (int r = size; r <= size * 8; r += size) {
             for (int c = size; c <= size * 8; c += size) {
                 if ((r + c) / size % 2 == 0) {
-                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_LIGHT));
+                    chessBoard.add(new Tile(r, c, size, size, TILE_COLOR_LIGHT));
                 } else {
-                    chessBoard.add(new Tile(r,c,size,size,TILE_COLOR_DARK));
+                    chessBoard.add(new Tile(r, c, size, size, TILE_COLOR_DARK));
                 }
             }
         }
-        this.panel = new GamePanel(this,chessBoard, p1,p2);
+        this.panel = new GamePanel(this, chessBoard, p1, p2);
         window.getContentPane().removeAll();
         window.add(this.panel);
         window.revalidate();
         fillBoard();
         this.panel.displayPlayer(this.currentPlayer);
     }
+    public boolean checkInPath(King k) {
+        Point originalPos = k.getPos();
+        int endX = k.getPos().x;
+        int startX = k.getPrevPos().x;
+        if (endX > startX) { // To the right
+            for (int i = startX; i <= endX; i++) {
+                k.setPos(new Point(i,k.getPos().y));
+                if (checkForCheck(k.getPlayer())) {
+                    k.setPos(originalPos); // Return unmodified
+                    System.out.println("Theres a check");
+                    return true;
+                }
+            }
+        } if (startX > endX) {
+            for (int i = endX; i <= startX; i++) {
+                k.setPos(new Point(i,k.getPos().y));
+                if (checkForCheck(k.getPlayer())) {
+                    k.setPos(originalPos); // Return unmodified
+                    System.out.println("Theres a check");
+                    return true;
+                }
+            }
+        } return false;
+
+    }
+    public Piece isPassantMove(Pawn pawn) {
+        int xDiff = pawn.getPos().x - pawn.getPrevPos().x;
+        System.out.println("In passant Passant!!!");
+        Piece piece = null;
+        boolean pieceBesidePassant = false;
+        ArrayList<Piece> pieces = this.currentPlayer == p1 ? p2.getPieces() : p1.getPieces();
+        for (Piece p : pieces) {
+            if (!(p instanceof Pawn)) {
+                continue;
+            }
+            if (pawn.getPrevPos().y == p.getPrevPos().y && pawn.getPrevPos().x == (p.getPrevPos().x - 1) && xDiff > 0) {
+                if (((Pawn) p).getPassant()) {
+                    System.out.println("True! Passant!!!");
+                    piece = p;
+                    pieceBesidePassant = true;
+                }
+            }
+
+            if (pawn.getPrevPos().y == p.getPrevPos().y && pawn.getPrevPos().x == (p.getPrevPos().x + 1) && xDiff < 0) {
+                if (((Pawn) p).getPassant()) {
+                    System.out.println("True! Passant!!!");
+                    piece = p;
+                    pieceBesidePassant = true;
+                }
+            }
+        } if ( pawn.isCaptureMove() && pieceBesidePassant) {
+            return piece;
+
+        } return null;
+    }
+
+
+
+
+
+
+
+
+
+
 }
 
 
